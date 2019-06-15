@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Assets Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li><a href="./index">Home</a></li>
+        <li><a href="#">Export Data</a></li>
+        <li><a href="./search_c">Search Data</a></li>
+        <li><a href="./revenue">Revenue</a></li>
+
+    </ul>
+    <div class="row">
+        <div class="container">
+            <br>
+            <h2>Assets Management</h2>
+            <br>
+            <fieldset>
+                <legend>Capax</legend>
+                <form id="capaxdetails">
+                    <div class="form-group">
+                        <label for="exampleserailNumber">Serial Number</label>
+                        <input type="text" class="form-control snumber" id="exampleserailNumber"
+                            placeholder="Enter Serial Number" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleSapCode">Sap Code</label>
+                        <input type="text" class="form-control sapcode" id="exampleSapCode" placeholder="Enter Sap Code"
+                            autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleMaterialCode">Material Code</label>
+                        <input type="text" class="form-control materialcode" id="exampleMaterialCode"
+                            placeholder="Enter Material Code" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleMaterialQuantity">Material Quantity</label>
+                        <input type="number" class="form-control materialquantity" id="exampleMaterialQuantity"
+                            placeholder="Enter Material Quantity" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="examplepoNumber">PO Number</label>
+                        <input type="text" class="form-control ponumber" id="examplepoNumber"
+                            placeholder="Enter PO Number" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="examplepoDate">PO Date</label>
+                        <input type="date" class="form-control podate" id="examplepoDate"
+                            placeholder="Enter PO Date" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInvoiceDate">Invoice Date</label>
+                        <input type="date" class="form-control invoicedate" id="exampleInvoiceDate" autocomplete="off"
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInvoiceNumber">Invoice Number</label>
+                        <input type="number" class="form-control invoicenumber" id="exampleInvoiceNumber"
+                            placeholder="Enter Invoice Number" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleRecieveDate">Receive Date</label>
+                        <input type="date" class="form-control receivedate" id="exampleRecieveDate" autocomplete="off"
+                            >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleModel">Model</label>
+                        <input type="text" class="form-control model" id="exampleModel" autocomplete="off"
+                            placeholder="Enter Model">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleModelDescp">Model Description</label>
+                        <textarea rows="6" cols="70" type="textarea" class="form-control modeldescp"
+                            id="exampleModelDescp" autocomplete="off" placeholder="Enter Model Description"> </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleUpdateSummit">Updated In Summit</label>
+                        <select class="form-control summit" id="exampleUpdateSummit" autocomplete="off"
+                            placeholder="Enter Sap Code">
+                            <option value="" disabled selected>Select</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </fieldset>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script src="app_c.js"></script>
+</body>
