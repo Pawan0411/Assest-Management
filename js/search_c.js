@@ -8,8 +8,11 @@ const firebaseConfig = {
     messagingSenderId: "429074630365",
     appId: "1:429074630365:web:62f74225288877aa"
 };
+
 firebase.initializeApp(firebaseConfig);
 var messagesRef = firebase.database().ref('Capax');
+var events = [];
+var i = 0;
 $('#capaxdetails').submit(function (e) {
     $(this),
         e.preventDefault();
@@ -31,11 +34,29 @@ $('#capaxdetails').submit(function (e) {
             document.getElementById("exampleRecieveDate").readOnly = true;
             document.getElementById('delete').style.visibility = "hidden";
             document.getElementById('edit').style.visibility = "hidden";
+            document.getElementById('history').style.visibility = "hidden";
             document.getElementById('exampleserailNumber_c').value = "";
         } else {
             window.alert("Retrived  Succesfully");
             messagesRef.child(document.getElementById('exampleserailNumber_c').value).on("child_added", function (data) {
-
+                console.log(JSON.stringify(data.val()));
+                // window.open("/check/" + JSON.stringify(data.val()));
+                var event = data.val();
+                events.push({
+                    serialNumber: event.serialNumber,
+                    sapcode: event.sapcode,
+                    materialcode: event.materialcode,
+                    materialquantity: event.materialquantity,
+                    ponumber: event.ponumber,
+                    podate: event.podate,
+                    invoiceDate: event.invoiceDate,
+                    invoiceNumber: event.invoiceNumber,
+                    receiveDate: event.receiveDate,
+                    model: event.model,
+                    modelDescp: event.modelDescp,
+                    summit: event.summit
+                });
+                // console.log(events[i]);
                 document.getElementById('exampleserailNumber').value = data.val().serialNumber;
                 document.getElementById('exampleSapCode').value = data.val().sapcode;
                 document.getElementById('exampleMaterialCode').value = data.val().materialcode;
@@ -43,16 +64,15 @@ $('#capaxdetails').submit(function (e) {
                 document.getElementById('examplepoNumber').value = data.val().ponumber;
                 document.getElementById('examplepoDate').value = data.val().podate;
                 document.getElementById('exampleInvoiceDate').value = data.val().invoiceDate;
-                document.getElementById('exampleInvoiceNumber').value = data.val().invoiceNumber;
                 document.getElementById('exampleRecieveDate').value = data.val().receiveDate;
                 document.getElementById('exampleModel').value = data.val().model;
                 document.getElementById('exampleModelDescp').value = data.val().modelDescp;
+                document.getElementById('exampleInvoiceNumber').value = data.val().invoiceNumber;
                 document.getElementById('exampleUpdateSummit').value = data.val().summit;
                 // $('.success-message').show();
-
-
                 document.getElementById('delete').style.visibility = "visible";
                 document.getElementById('edit').style.visibility = "visible";
+                document.getElementById('history').style.visibility = "visible";
 
             });
         }
@@ -61,7 +81,7 @@ $('#capaxdetails').submit(function (e) {
 });
 
 document.getElementById('delete').onclick = function () {
-    var messagesRef = firebase.database().ref('Capax');
+    var messagesRef = firebase.database().ref('Revenue');
     if (confirm("Are you sure want to delete ?")) {
         messagesRef.child(document.getElementById('exampleserailNumber').value).remove();
         messagesRef.once("value").then(function (snapshot) {
@@ -87,6 +107,7 @@ document.getElementById('delete').onclick = function () {
                 document.getElementById('delete').style.visibility = "hidden";
                 document.getElementById('edit').style.visibility = "hidden";
                 document.getElementById('update').style.visibility = "hidden";
+                document.getElementById('history').style.visibility = "hidden";
 
                 document.getElementById('exampleserailNumber').readOnly = true;
                 document.getElementById('exampleSapCode').readOnly = true;
@@ -95,10 +116,10 @@ document.getElementById('delete').onclick = function () {
                 document.getElementById('examplepoDate').readOnly = true;
                 document.getElementById('examplepoNumber').readOnly = true;
                 document.getElementById('exampleInvoiceDate').readOnly = true;
-                document.getElementById('exampleInvoiceNumber').readOnly = true;
                 document.getElementById('exampleRecieveDate').readOnly = true;
                 document.getElementById('exampleModel').readOnly = true;
                 document.getElementById('exampleModelDescp').readOnly = true;
+                document.getElementById('exampleInvoiceNumber').readOnly = true
                 document.getElementById('exampleUpdateSummit').disabled = true;
             }
         });
@@ -106,8 +127,8 @@ document.getElementById('delete').onclick = function () {
 }
 document.getElementById('edit').onclick = function () {
 
-    document.getElementById('exampleserailNumber_c').readOnly = true;
-    document.getElementById('btn_cap').disabled = true;
+    document.getElementById('exampleserailNumber_r').readOnly = true;
+    document.getElementById('btn_ret').disabled = true;
     document.getElementById('exampleserailNumber').readOnly = false;
     document.getElementById('exampleSapCode').readOnly = false;
     document.getElementById('exampleMaterialCode').readOnly = false;
@@ -115,16 +136,17 @@ document.getElementById('edit').onclick = function () {
     document.getElementById('examplepoDate').readOnly = false;
     document.getElementById('examplepoNumber').readOnly = false;
     document.getElementById('exampleInvoiceDate').readOnly = false;
-    document.getElementById('exampleInvoiceNumber').readOnly = false;
     document.getElementById('exampleRecieveDate').readOnly = false;
     document.getElementById('exampleModel').readOnly = false;
     document.getElementById('exampleModelDescp').readOnly = false;
+    document.getElementById('exampleInvoiceNumber').readOnly = false;
     document.getElementById('exampleUpdateSummit').disabled = false;
 
     document.getElementById('delete').style.visibility = "hidden";
     document.getElementById('edit').style.visibility = "hidden";
+    document.getElementById('history').style.visibility = "hidden";
     document.getElementById('update').style.visibility = "visible";
-   
+
 };
 $('#capax').submit(function (e) {
     $(this);
@@ -139,7 +161,7 @@ $('#capax').submit(function (e) {
 
     } else {
         console.log("changed");
-        var messagesRef1 = firebase.database().ref('Capax');
+        var messagesRef1 = firebase.database().ref('capax');
         var newMessageRef = messagesRef1.child(document.getElementById('exampleserailNumber').value).push();
         newMessageRef.set({
             serialNumber: $('.snumber').val(),
@@ -149,24 +171,28 @@ $('#capax').submit(function (e) {
             ponumber: $('.ponumber').val(),
             podate: $('.podate').val(),
             invoiceDate: $('.invoicedate').val(),
-            invoiceNumber: $('.invoicenumber').val(),   
+            invoiceNumber: $('.invoicenumber').val(),
             receiveDate: $('.receivedate').val(),
             model: $('.model').val(),
             modelDescp: $('.modeldescp').val(),
             summit: $('.summit').val()
-        }); 
-        
+        });
+
 
         document.getElementById('delete').style.visibility = "hidden";
         document.getElementById('edit').style.visibility = "hidden";
+        document.getElementById('history').style.visibility = "hidden";
         document.getElementById('update').style.visibility = "hidden";
+        document.getElementById('btn_prev').style.visibility = "hidden";
+        document.getElementById('btn_next').style.visibility = "hidden";
+        document.getElementById('page').style.visibility = "hidden";
         window.alert("Submitted Successfully");
         $('#capax')[0].reset();
         $('#capaxdetails')[0].reset();
 
 
         document.getElementById('exampleserailNumber_c').readOnly = false;
-        document.getElementById('btn_cap').disabled = false;
+        document.getElementById('btn_ret').disabled = false;
         document.getElementById('exampleserailNumber').readOnly = true;
         document.getElementById('exampleSapCode').readOnly = true;
         document.getElementById('exampleMaterialCode').readOnly = true;
@@ -174,15 +200,99 @@ $('#capax').submit(function (e) {
         document.getElementById('examplepoDate').readOnly = true;
         document.getElementById('examplepoNumber').readOnly = true;
         document.getElementById('exampleInvoiceDate').readOnly = true;
-        document.getElementById('exampleInvoiceNumber').readOnly = true;
         document.getElementById('exampleRecieveDate').readOnly = true;
         document.getElementById('exampleModel').readOnly = true;
         document.getElementById('exampleModelDescp').readOnly = true;
+        document.getElementById('exampleInvoiceNumber').readOnly = true
         document.getElementById('exampleUpdateSummit').disabled = true;
     }
 });
 
+var current_page = 1;
+document.getElementById('history').onclick = function () {
+    // document.getElementById('btn_prev').style.visibility = "visible";
+    document.getElementById('btn_next').style.visibility = "visible";
+    document.getElementById('page').style.visibility = "visible";
+    document.getElementById('show').style.visibility = "visible";
+    var page_span = document.getElementById("page");
+    page_span.innerHTML = 1;
+    document.getElementById('delete').style.visibility = "hidden";
+    document.getElementById('edit').style.visibility = "hidden";
+    document.getElementById('history').style.visibility = "hidden";
+    document.getElementById('btn_prev').onclick = function prevPage() {
+        if (current_page > 1) {
+            current_page--;
+            changePage(current_page);
+        }
+
+        console.log(events[i]);
+        document.getElementById('exampleserailNumber').value = events[i].serialNumber;
+        document.getElementById('exampleSapCode').value = events[i].sapcode;
+        document.getElementById('exampleMaterialCode').value = events[i].materialcode;
+        document.getElementById('exampleMaterialQuantity').value = events[i].materialquantity;
+        document.getElementById('examplepoNumber').value = events[i].ponumber;
+        document.getElementById('examplepoDate').value = events[i].podate;
+        document.getElementById('exampleInvoiceDate').value = events[i].invoiceDate;
+        document.getElementById('exampleInvoiceNumber').value = events[i].invoiceNumber;
+        document.getElementById('exampleRecieveDate').value = events[i].receiveDate;
+        document.getElementById('exampleModel').value = events[i].model;
+        document.getElementById('exampleModelDescp').value = events[i].modelDescp;
+        document.getElementById('exampleUpdateSummit').value = events[i].summit;
+        // $('.success-message').show();
+        --i;
+
+    }
+
+    document.getElementById('btn_next').onclick = function nextPage() {
+        document.getElementById('btn_prev').style.visibility = "visible";
+        if (current_page < events.length) {
+            current_page++;
+            changePage(current_page);
+        }
+
+        console.log(events[i]);
+        document.getElementById('exampleserailNumber').value = events[i].serialNumber;
+        document.getElementById('exampleSapCode').value = events[i].sapcode;
+        document.getElementById('exampleMaterialCode').value = events[i].materialcode;
+        document.getElementById('exampleMaterialQuantity').value = events[i].materialquantity;
+        document.getElementById('examplepoNumber').value = events[i].ponumber;
+        document.getElementById('examplepoDate').value = events[i].podate;
+        document.getElementById('exampleInvoiceDate').value = events[i].invoiceDate;
+        document.getElementById('exampleInvoiceNumber').value = events[i].invoiceNumber;
+        document.getElementById('exampleRecieveDate').value = events[i].receiveDate;
+        document.getElementById('exampleModel').value = events[i].model;
+        document.getElementById('exampleModelDescp').value = events[i].modelDescp;
+        document.getElementById('exampleUpdateSummit').value = events[i].summit;
+        // $('.success-message').show();
+        ++i;
+
+    }
+
+    function changePage(page) {
 
 
+        // Validate page
+        if (page < 1) page = 1;
+        if (page > events.length) page = events.length;
 
+        page_span.innerHTML = page;
+
+
+        if (page == 1) {
+            document.getElementById('btn_prev').style.visibility = "hidden";
+        } else {
+            document.getElementById('btn_prev').style.visibility = "visible";
+        }
+
+        if (page == events.length) {
+            document.getElementById('btn_next').style.visibility = "hidden";
+        } else {
+            document.getElementById('btn_next').style.visibility = "visible";
+        }
+    }
+    window.onload = function () {
+        changePage(1);
+    };
+
+}
 

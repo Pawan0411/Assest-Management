@@ -13,6 +13,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 var messagesRef1 = firebase.database().ref('Revenue');
+var messagesRef2 = firebase.database().ref('Revenue Details');
 $('#revenuedetails').submit(function (e) {
     $(this);
     e.preventDefault();
@@ -33,6 +34,19 @@ $('#revenuedetails').submit(function (e) {
     console.log("Submit to Firebase")
     // $('.success-message').show();
     window.alert("Submitted Successfully.")
-
+    var newMessageRef = messagesRef2.push();
+    newMessageRef.set({
+        serialNumber: $('.snumber_r').val(),
+        sapcode: $('.sapcode_r').val(),
+        materialcode: $('.materialcode_r').val(),
+        materialquantity: $('.materialquantity_r').val(),
+        ponumber: $('.ponumber_r').val(),
+        podate: $('.podate_r').val(),
+        invoiceDate: $('.invoicedate_r').val(),
+        receiveDate: $('.receivedate_r').val(),
+        model: $('.model_r').val(),
+        modelDescp: $('.modeldescp_r').val(),
+    });
+    console.log("Submit to Firebase")
     $('#revenuedetails')[0].reset();
 });

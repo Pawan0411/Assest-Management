@@ -1,4 +1,4 @@
-var fs = requirejs('fs');
+
 const firebaseConfig = {
     apiKey: "AIzaSyDMXaX8AR8MKDoZohHewzphFERUEubVm0Y",
     authDomain: "assests-managment.firebaseapp.com",
@@ -39,8 +39,8 @@ $('#revenuedetails').submit(function (e) {
         } else {
             window.alert("Retrived  Succesfully");
             messagesRef.child(document.getElementById('exampleserailNumber_r').value).on("child_added", function (data) {
-                // console.log(dataarray[0])
                 console.log(JSON.stringify(data.val()));
+                // window.open("/check/" + JSON.stringify(data.val()));
                 var event = data.val();
                 events.push({
                     serialNumber: event.serialNumber,

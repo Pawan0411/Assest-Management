@@ -37,8 +37,7 @@
 
 <body>
     <ul>
-        <li><a href="./index">Home</a></li>
-        <li><a href="#">Export Data</a></li>
+        <li><a href="#">Import Data</a></li>
         <li><a href="./capax">Capax</a></li>
 
     </ul>
@@ -47,7 +46,7 @@
             <br>
             <h2>Assets Management</h2>
             <br>
-        
+
             <fieldset>
                 <legend>Capax</legend>
                 <form id="capaxdetails">
@@ -98,10 +97,10 @@
                                 id="exampleInvoiceDate" autocomplete="off">
                         </div>
                         <div class="form-group">
-                                <label for="exampleInvoiceNumber">Invoice Number</label>
-                                <input type="text" readonly="readonly" class="form-control invoicenumber"
-                                    id="exampleInvoiceNumber" autocomplete="off">
-                            </div>
+                            <label for="exampleInvoiceNumber">Invoice Number</label>
+                            <input type="text" readonly="readonly" class="form-control invoicenumber"
+                                id="exampleInvoiceNumber" autocomplete="off">
+                        </div>
                         <div class="form-group">
                             <label for="exampleRecieveDate">Receive Date</label>
                             <input type="date" readonly="readonly" class="form-control receivedate"
@@ -132,9 +131,14 @@
                 </form>
                 <br>
             </fieldset>
-                <button type="delete" style="visibility: hidden" class="btn btn-danger" id="delete">Delete</button>
-                <button type="edit" class="btn btn-primary" style="visibility: hidden" id="edit">Edit</button>
-            
+            <button type="prev" style="visibility: hidden" id="btn_prev" class="btn btn-link">Prev</button>
+            <button type="next" style="visibility: hidden" id="btn_next" class="btn btn-link">Next</button>
+            <p id="show" style="visibility: hidden">Page:<span style="visibility: hidden" id="page"></span></p>
+            <br>
+            <button type="delete" style="visibility: hidden" class="btn btn-danger" id="delete">Delete</button>
+            <button type="edit" style="visibility: hidden" class="btn btn-primary" id="edit">Edit</button>
+            <button type="history" style="visibility: hidden" class="btn btn-primary" id="history">History</button>
+
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

@@ -36,5 +36,22 @@ $('#capaxdetails').submit(function (e) {
     // $('.success-message').show();
     window.alert("Submitted Successfully.")
     console.log("Submit to Firebase");
+    var messagesRef1 = firebase.database().ref('Capax Details');
+    var newMessageRef = messagesRef1.push();
+    newMessageRef.set({
+        serialNumber: $('.snumber').val(),
+        sapcode: $('.sapcode').val(),
+        materialcode: $('.materialcode').val(),
+        materialquantity: $('.materialquantity').val(),
+        ponumber: $('.ponumber').val(),
+        podate: $('.podate').val(),
+        invoiceDate: $('.invoicedate').val(),
+        invoiceNumber: $('.invoicenumber').val(),
+        receiveDate: $('.receivedate').val(),
+        model: $('.model').val(),
+        modelDescp: $('.modeldescp').val(),
+        summit: $('.summit').val(),
+    });
+    console.log("Submit to Firebase");
     $('#capaxdetails')[0].reset();
 });
