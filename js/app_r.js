@@ -14,12 +14,16 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 var messagesRef1 = firebase.database().ref('Revenue');
 var messagesRef2 = firebase.database().ref('Revenue Details');
+var pushkey;
 $('#revenuedetails').submit(function (e) {
     $(this);
     e.preventDefault();
     console.log(document.getElementById('exampleserailNumber').value);
     var newMessageRef = messagesRef1.child(document.getElementById('exampleserailNumber').value).push();
+    pushkey = newMessageRef.key;
+    console.log(pushkey);
     newMessageRef.set({
+        pushID: pushkey,
         serialNumber: $('.snumber_r').val(),
         sapcode: $('.sapcode_r').val(),
         materialcode: $('.materialcode_r').val(),
@@ -31,12 +35,13 @@ $('#revenuedetails').submit(function (e) {
         model: $('.model_r').val(),
         modelDescp: $('.modeldescp_r').val(),
     });
+
     console.log("Submit to Firebase")
     // $('.success-message').show();
     window.alert("Submitted Successfully.")
-    var newMessageRef = messagesRef2.push();
+    var newMessageRef = messagesRef2.child(pushkey);
     newMessageRef.set({
-        serialNumber: $('.snumber_r').val(),
+        a_serialNumber: $('.snumber_r').val(),
         sapcode: $('.sapcode_r').val(),
         materialcode: $('.materialcode_r').val(),
         materialquantity: $('.materialquantity_r').val(),

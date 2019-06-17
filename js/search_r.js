@@ -13,13 +13,14 @@ firebase.initializeApp(firebaseConfig);
 var messagesRef = firebase.database().ref('Revenue');
 var events = [];
 var i = 0;
+var pushkey;
 $('#revenuedetails').submit(function (e) {
     $(this),
         e.preventDefault();
-
     messagesRef.once("value").then(function (snapshot) {
 
         var a = snapshot.child(document.getElementById('exampleserailNumber_r').value).exists();
+
         if (!a) {
             window.alert("No Data");
             $('#revenue')[0].reset();
@@ -38,91 +39,49 @@ $('#revenuedetails').submit(function (e) {
             document.getElementById('exampleserailNumber_r').value = "";
         } else {
             window.alert("Retrived  Succesfully");
-            messagesRef.child(document.getElementById('exampleserailNumber_r').value).on("child_added", function (data) {
-                console.log(JSON.stringify(data.val()));
-                // window.open("/check/" + JSON.stringify(data.val()));
-                var event = data.val();
-                events.push({
-                    serialNumber: event.serialNumber,
-                    sapcode: event.sapcode,
-                    materialcode: event.materialcode,
-                    materialquantity: event.materialquantity,
-                    ponumber: event.ponumber,
-                    podate: event.podate,
-                    invoiceDate: event.invoiceDate,
-                    receiveDate: event.receiveDate,
-                    model: event.model,
-                    modelDescp: event.modelDescp
-                });
-                // console.log(events[i]);
-                document.getElementById('exampleserailNumber').value = data.val().serialNumber;
-                document.getElementById('exampleSapCode').value = data.val().sapcode;
-                document.getElementById('exampleMaterialCode').value = data.val().materialcode;
-                document.getElementById('exampleMaterialQuantity').value = data.val().materialquantity;
-                document.getElementById('examplepoNumber').value = data.val().ponumber;
-                document.getElementById('examplepoDate').value = data.val().podate;
-                document.getElementById('exampleInvoiceDate').value = data.val().invoiceDate;
-                document.getElementById('exampleRecieveDate').value = data.val().receiveDate;
-                document.getElementById('exampleModel').value = data.val().model;
-                document.getElementById('exampleModelDescp').value = data.val().modelDescp;
-                // $('.success-message').show();
-                document.getElementById('delete').style.visibility = "visible";
-                document.getElementById('edit').style.visibility = "visible";
-                document.getElementById('history').style.visibility = "visible";
+            messagesRef.child(document.getElementById('exampleserailNumber_r').value)
+                .on("child_added", function (data) {
+                    console.log('');
+                    console.log(JSON.stringify(data.val()))
+                    // window.open("/check/" + JSON.stringify(data.val()));
+                    var event = data.val();
+                    events.push({
+                        serialNumber: event.serialNumber,
+                        sapcode: event.sapcode,
+                        materialcode: event.materialcode,
+                        materialquantity: event.materialquantity,
+                        ponumber: event.ponumber,
+                        podate: event.podate,
+                        invoiceDate: event.invoiceDate,
+                        receiveDate: event.receiveDate,
+                        model: event.model,
+                        modelDescp: event.modelDescp
+                    });
 
-            });
+                    document.getElementById('exampleserailNumber').value = data.val().serialNumber;
+                    document.getElementById('exampleSapCode').value = data.val().sapcode;
+                    document.getElementById('exampleMaterialCode').value = data.val().materialcode;
+                    document.getElementById('exampleMaterialQuantity').value = data.val().materialquantity;
+                    document.getElementById('examplepoNumber').value = data.val().ponumber;
+                    document.getElementById('examplepoDate').value = data.val().podate;
+                    document.getElementById('exampleInvoiceDate').value = data.val().invoiceDate;
+                    document.getElementById('exampleRecieveDate').value = data.val().receiveDate;
+                    document.getElementById('exampleModel').value = data.val().model;
+                    document.getElementById('exampleModelDescp').value = data.val().modelDescp;
+                    // $('.success-message').show();
+                    document.getElementById('delete').style.visibility = "visible";
+                    document.getElementById('edit').style.visibility = "visible";
+                    document.getElementById('history').style.visibility = "visible";
+
+                });
         }
     });
 
 });
-
-document.getElementById('delete').onclick = function () {
-    var messagesRef = firebase.database().ref('Revenue');
-    if (confirm("Are you sure want to delete ?")) {
-        messagesRef.child(document.getElementById('exampleserailNumber').value).remove();
-        messagesRef.once("value").then(function (snapshot) {
-
-            var a = snapshot.child(document.getElementById('exampleserailNumber').value).exists();
-            if (a) {
-                console.log("Not removed");
-            } else {
-                console.log('Removed');
-                window.alert("Deleted Successfully.");
-                document.getElementById("examplepoDate").readOnly = false;
-                document.getElementById('examplepoDate').value = "";
-                document.getElementById("examplepoDate").readOnly = true;
-                document.getElementById("exampleInvoiceDate").readOnly = false;
-                document.getElementById('exampleInvoiceDate').value = "";
-                document.getElementById("exampleInvoiceDate").readOnly = true;
-                document.getElementById("exampleRecieveDate").readOnly = false;
-                document.getElementById('exampleRecieveDate').value = "";
-                document.getElementById("exampleRecieveDate").readOnly = true;
-                $('#revenue')[0].reset();
-
-                $('#revenuedetails')[0].reset();
-                document.getElementById('delete').style.visibility = "hidden";
-                document.getElementById('edit').style.visibility = "hidden";
-                document.getElementById('update').style.visibility = "hidden";
-                document.getElementById('history').style.visibility = "hidden";
-
-                document.getElementById('exampleserailNumber').readOnly = true;
-                document.getElementById('exampleSapCode').readOnly = true;
-                document.getElementById('exampleMaterialCode').readOnly = true;
-                document.getElementById('exampleMaterialQuantity').readOnly = true;
-                document.getElementById('examplepoDate').readOnly = true;
-                document.getElementById('examplepoNumber').readOnly = true;
-                document.getElementById('exampleInvoiceDate').readOnly = true;
-                document.getElementById('exampleRecieveDate').readOnly = true;
-                document.getElementById('exampleModel').readOnly = true;
-                document.getElementById('exampleModelDescp').readOnly = true;
-            }
-        });
-    }
-}
 document.getElementById('edit').onclick = function () {
 
-    document.getElementById('exampleserailNumber_r').readOnly = true;
-    document.getElementById('btn_ret').disabled = true;
+    document.getElementById('exampleserailNumber_c').readOnly = true;
+    document.getElementById('btn_cap').disabled = true;
     document.getElementById('exampleserailNumber').readOnly = false;
     document.getElementById('exampleSapCode').readOnly = false;
     document.getElementById('exampleMaterialCode').readOnly = false;
@@ -147,15 +106,14 @@ $('#revenue').submit(function (e) {
     $('#revenue :input').change(function () {
         $('#revenue').data('changed', true);
     });
-    if (!$('#revenue').data('changed')) {
-        console.log("not changed");
-        window.alert("No data changed");
-
-    } else {
+    if ($('#revenue').data('changed')) {
         console.log("changed");
         var messagesRef1 = firebase.database().ref('Revenue');
+        var messagesRef2 = firebase.database().ref('Revenue Details');
         var newMessageRef = messagesRef1.child(document.getElementById('exampleserailNumber').value).push();
+         pushkey = newMessageRef.key;
         newMessageRef.set({
+            pushID: pushkey,
             serialNumber: $('.snumber').val(),
             sapcode: $('.sapcode').val(),
             materialcode: $('.materialcode').val(),
@@ -167,35 +125,54 @@ $('#revenue').submit(function (e) {
             model: $('.model').val(),
             modelDescp: $('.modeldescp').val(),
         });
-
-
-        document.getElementById('delete').style.visibility = "hidden";
-        document.getElementById('edit').style.visibility = "hidden";
-        document.getElementById('history').style.visibility = "hidden";
-        document.getElementById('update').style.visibility = "hidden";
-        document.getElementById('btn_prev').style.visibility = "hidden";
-        document.getElementById('btn_next').style.visibility = "hidden";
-        document.getElementById('page').style.visibility = "hidden";
+        var newMessageRef = messagesRef2.child(pushkey);
+        newMessageRef.set({
+        pushID: pushkey,
+        a_serialNumber: $('.snumber').val(),
+        sapcode: $('.sapcode').val(),
+        materialcode: $('.materialcode').val(),
+        materialquantity: $('.materialquantity').val(),
+        ponumber: $('.ponumber').val(),
+        podate: $('.podate').val(),
+        invoiceDate: $('.invoicedate').val(),
+        receiveDate: $('.receivedate').val(),
+        model: $('.model').val(),
+        modelDescp: $('.modeldescp').val()
+        });
         window.alert("Submitted Successfully");
-        $('#revenue')[0].reset();
-        $('#revenuedetails')[0].reset();
-
-
-        document.getElementById('exampleserailNumber_r').readOnly = false;
-        document.getElementById('btn_ret').disabled = false;
-        document.getElementById('exampleserailNumber').readOnly = true;
-        document.getElementById('exampleSapCode').readOnly = true;
-        document.getElementById('exampleMaterialCode').readOnly = true;
-        document.getElementById('exampleMaterialQuantity').readOnly = true;
-        document.getElementById('examplepoDate').readOnly = true;
-        document.getElementById('examplepoNumber').readOnly = true;
-        document.getElementById('exampleInvoiceDate').readOnly = true;
-        document.getElementById('exampleRecieveDate').readOnly = true;
-        document.getElementById('exampleModel').readOnly = true;
-        document.getElementById('exampleModelDescp').readOnly = true;
+        window.location.reload();
+    } else {
+        console.log("not changed");
+        window.alert("No data changed");
     }
 });
-
+document.getElementById('delete').onclick = function () {
+    var messagesRef = firebase.database().ref('Revenue');
+    var messagesRef2 = firebase.database().ref('Revenue Details');
+    var reve, reved;
+    if (confirm("Are you sure want to delete ?")) {
+        messagesRef.child(document.getElementById('exampleserailNumber').value)
+        .on("child_added", function (data) {
+            pushkey = data.val().pushID;
+        });
+        console.log(pushkey);
+        messagesRef2.child(pushkey).remove();
+        messagesRef.child(document.getElementById('exampleserailNumber').value).child(pushkey).remove();
+        messagesRef.once("child_added").then(function (snapshot) {
+             reve = snapshot.child(document.getElementById('exampleserailNumber').value).child(pushkey).exists();
+        });
+        messagesRef2.once('value').then(function  (snap){
+            reved = snap.child(pushkey).exists();
+        });
+         if (reve == true && reved == true) {
+                console.log("Not removed");
+            } else {
+                console.log('Removed');
+                window.alert("Deleted Successfully.");
+                window,location.reload();
+            }
+    }
+}
 var current_page = 1;
 document.getElementById('history').onclick = function () {
     // document.getElementById('btn_prev').style.visibility = "visible";
@@ -212,7 +189,7 @@ document.getElementById('history').onclick = function () {
             current_page--;
             changePage(current_page);
         }
-        
+
         console.log(events[i]);
         document.getElementById('exampleserailNumber').value = events[i].serialNumber;
         document.getElementById('exampleSapCode').value = events[i].sapcode;
@@ -226,7 +203,7 @@ document.getElementById('history').onclick = function () {
         document.getElementById('exampleModelDescp').value = events[i].modelDescp;
         // $('.success-message').show();
         --i;
-       
+
     }
 
     document.getElementById('btn_next').onclick = function nextPage() {
@@ -235,7 +212,7 @@ document.getElementById('history').onclick = function () {
             current_page++;
             changePage(current_page);
         }
-       
+
         console.log(events[i]);
         document.getElementById('exampleserailNumber').value = events[i].serialNumber;
         document.getElementById('exampleSapCode').value = events[i].sapcode;
@@ -249,18 +226,18 @@ document.getElementById('history').onclick = function () {
         document.getElementById('exampleModelDescp').value = events[i].modelDescp;
         // $('.success-message').show();
         ++i;
-        
+
     }
-   
+
     function changePage(page) {
-        
+
 
         // Validate page
         if (page < 1) page = 1;
         if (page > events.length) page = events.length;
 
         page_span.innerHTML = page;
-     
+
 
         if (page == 1) {
             document.getElementById('btn_prev').style.visibility = "hidden";

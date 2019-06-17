@@ -12,14 +12,17 @@ const firebaseConfig = {
 
 
 firebase.initializeApp(firebaseConfig);
-
+var pushkey;
 var messagesRef = firebase.database().ref('Capax');
 $('#capaxdetails').submit(function (e) {
     $(this);
     e.preventDefault();
     console.log(document.getElementById('exampleserailNumber').value);
     var newMessageRef = messagesRef.child(document.getElementById('exampleserailNumber').value).push();
+    pushkey = newMessageRef.key;
+    console.log(pushkey);
     newMessageRef.set({
+        pushID: pushkey,
         serialNumber: $('.snumber').val(),
         sapcode: $('.sapcode').val(),
         materialcode: $('.materialcode').val(),
@@ -37,9 +40,9 @@ $('#capaxdetails').submit(function (e) {
     window.alert("Submitted Successfully.")
     console.log("Submit to Firebase");
     var messagesRef1 = firebase.database().ref('Capax Details');
-    var newMessageRef = messagesRef1.push();
+    var newMessageRef = messagesRef1.child(pushkey);
     newMessageRef.set({
-        serialNumber: $('.snumber').val(),
+        a_serialNumber: $('.snumber').val(),
         sapcode: $('.sapcode').val(),
         materialcode: $('.materialcode').val(),
         materialquantity: $('.materialquantity').val(),

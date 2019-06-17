@@ -1,65 +1,56 @@
 
-function getUiConfig() {
-    return {
-      'callbacks': {
-        // Called when the user has been successfully signed in.
-        'signInSuccess': function(user, credential, redirectUrl) {
-          handleSignedInUser(user);
-          // Do not redirect.
-          return false;
-        }
-      },
-      // Opens IDP Providers sign-in flow in a popup.
-      'signInFlow': 'popup',
-      'signInOptions': [
-        // The Provider you need for your app. We need the Phone Auth
-        {
-          provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-          defaultCountry: 'IN',
-         
-        }
-      ],
-      // Terms of service url.
-    };
-  }
+var code = document.getElementById('inputPassword').value = "";
+const firebaseConfig = {
+  apiKey: "AIzaSyDMXaX8AR8MKDoZohHewzphFERUEubVm0Y",
+  authDomain: "assests-managment.firebaseapp.com",
+  databaseURL: "https://assests-managment.firebaseio.com",
+  projectId: "assests-managment",
+  storageBucket: "assests-managment.appspot.com",
+  messagingSenderId: "429074630365",
+  appId: "1:429074630365:web:62f74225288877aa"
+};
 
-  var ui = new firebaseui.auth.AuthUI(firebase.auth());
-  
-  /**
-   * Displays the UI for a signed in user.
-   * @param {!firebase.User} user
-   */
-  var handleSignedInUser = function(user) {
-    document.getElementById('user-signed-in').style.display = 'block';
-    document.getElementById('user-signed-out').style.display = 'none';
-    window.unload = function () {
-      return firebase.auth().signOut();;
-  };
-  };
-  
-  
-  /**
-   * Displays the UI for a signed out user.
-   */
-  var handleSignedOutUser = function() {
-    document.getElementById('user-signed-in').style.display = 'none';
-    document.getElementById('user-signed-out').style.display = 'block';
-    ui.start('#firebaseui-container', getUiConfig());
-  };
-  
-  // Listen to change in auth state so it displays the correct UI for when
-  // the user is signed in or not.
-  firebase.auth().onAuthStateChanged(function(user) {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('loaded').style.display = 'block';
-    user ? handleSignedInUser(user) : handleSignedOutUser();
-  });
-  
-  var initApp = function() {
-    document.getElementById('sign-out').addEventListener('click', function() {
-      firebase.auth().signOut();
+firebase.initializeApp(firebaseConfig);
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
+  'size': 'invisible',
+  'callback': function (response) {
+    // reCAPTCHA solved, allow signInWithPhoneNumber.
+   // onSignInSubmit();
+    console.log(response)
+  }
+});
+var phoneNumber = '+918462935367';
+var appVerifier = window.recaptchaVerifier;
+firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+  .then(function (confirmationResult) {
+    // SMS sent. Prompt user to type the code from the message, then sign the
+    // user in with confirmationResult.confirm(code).
+    window.confirmationResult = confirmationResult;
+    console.log('Code Sent')
+    document.getElementById('resend').disabled = false;
+    document.getElementById('resend').onclick = function(){
+      window.location.reload();
+    }
+    console.log(confirmationResult);
+    document.getElementById('sign-in-button').onclick = function () {
+      var code = document.getElementById('inputPassword').value;
+      confirmationResult.confirm(code).then(function (result) {
+        console.log(result);
+        document.getElementById('welcome').style.visibility = "visible";
+        document.getElementById('nav-bar').style.visibility = "visible";
+        document.getElementById('cardetails').style.visibility  = "hidden";
+      }).catch(function (error) {
+        // User couldn't sign in (bad verification code?)
+        console.log(error);
+        window.alert(error);
       });
-      
-  };
- 
-  window.addEventListener('load', initApp);
+      // var credential = firebase.auth.PhoneAuthProvider.credential(confirmationResult.verificationId, code);
+      // firebase.auth().signInWithCredential(credential);
+    }
+  }).catch(function (error) {
+    // Error; SMS not sent
+    console.log(error)
+  
+  });
+
+

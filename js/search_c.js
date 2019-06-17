@@ -13,6 +13,7 @@ firebase.initializeApp(firebaseConfig);
 var messagesRef = firebase.database().ref('Capax');
 var events = [];
 var i = 0;
+var pushkey;
 $('#capaxdetails').submit(function (e) {
     $(this),
         e.preventDefault();
@@ -38,7 +39,8 @@ $('#capaxdetails').submit(function (e) {
             document.getElementById('exampleserailNumber_c').value = "";
         } else {
             window.alert("Retrived  Succesfully");
-            messagesRef.child(document.getElementById('exampleserailNumber_c').value).on("child_added", function (data) {
+            messagesRef.child(document.getElementById('exampleserailNumber_c').value)
+            .on("child_added", function (data) {
                 console.log(JSON.stringify(data.val()));
                 // window.open("/check/" + JSON.stringify(data.val()));
                 var event = data.val();
@@ -79,56 +81,10 @@ $('#capaxdetails').submit(function (e) {
     });
 
 });
-
-document.getElementById('delete').onclick = function () {
-    var messagesRef = firebase.database().ref('Revenue');
-    if (confirm("Are you sure want to delete ?")) {
-        messagesRef.child(document.getElementById('exampleserailNumber').value).remove();
-        messagesRef.once("value").then(function (snapshot) {
-
-            var a = snapshot.child(document.getElementById('exampleserailNumber').value).exists();
-            if (a) {
-                console.log("Not removed");
-            } else {
-                console.log('Removed');
-                window.alert("Deleted Successfully.");
-                document.getElementById("examplepoDate").readOnly = false;
-                document.getElementById('examplepoDate').value = "";
-                document.getElementById("examplepoDate").readOnly = true;
-                document.getElementById("exampleInvoiceDate").readOnly = false;
-                document.getElementById('exampleInvoiceDate').value = "";
-                document.getElementById("exampleInvoiceDate").readOnly = true;
-                document.getElementById("exampleRecieveDate").readOnly = false;
-                document.getElementById('exampleRecieveDate').value = "";
-                document.getElementById("exampleRecieveDate").readOnly = true;
-                $('#capax')[0].reset();
-
-                $('#capaxdetails')[0].reset();
-                document.getElementById('delete').style.visibility = "hidden";
-                document.getElementById('edit').style.visibility = "hidden";
-                document.getElementById('update').style.visibility = "hidden";
-                document.getElementById('history').style.visibility = "hidden";
-
-                document.getElementById('exampleserailNumber').readOnly = true;
-                document.getElementById('exampleSapCode').readOnly = true;
-                document.getElementById('exampleMaterialCode').readOnly = true;
-                document.getElementById('exampleMaterialQuantity').readOnly = true;
-                document.getElementById('examplepoDate').readOnly = true;
-                document.getElementById('examplepoNumber').readOnly = true;
-                document.getElementById('exampleInvoiceDate').readOnly = true;
-                document.getElementById('exampleRecieveDate').readOnly = true;
-                document.getElementById('exampleModel').readOnly = true;
-                document.getElementById('exampleModelDescp').readOnly = true;
-                document.getElementById('exampleInvoiceNumber').readOnly = true
-                document.getElementById('exampleUpdateSummit').disabled = true;
-            }
-        });
-    }
-}
 document.getElementById('edit').onclick = function () {
 
-    document.getElementById('exampleserailNumber_r').readOnly = true;
-    document.getElementById('btn_ret').disabled = true;
+    document.getElementById('exampleserailNumber_c').readOnly = true;
+    document.getElementById('btn_cap').disabled = true;
     document.getElementById('exampleserailNumber').readOnly = false;
     document.getElementById('exampleSapCode').readOnly = false;
     document.getElementById('exampleMaterialCode').readOnly = false;
@@ -155,15 +111,14 @@ $('#capax').submit(function (e) {
     $('#capax :input').change(function () {
         $('#capax').data('changed', true);
     });
-    if (!$('#capax').data('changed')) {
-        console.log("not changed");
-        window.alert("No data changed");
-
-    } else {
+    if ($('#capax').data('changed')) {
         console.log("changed");
-        var messagesRef1 = firebase.database().ref('capax');
+        var messagesRef1 = firebase.database().ref('Capax');
+        var messagesRef2 = firebase.database().ref('Capax Details');
         var newMessageRef = messagesRef1.child(document.getElementById('exampleserailNumber').value).push();
+        pushkey = newMessageRef.key;
         newMessageRef.set({
+            pushID: pushkey,
             serialNumber: $('.snumber').val(),
             sapcode: $('.sapcode').val(),
             materialcode: $('.materialcode').val(),
@@ -177,37 +132,57 @@ $('#capax').submit(function (e) {
             modelDescp: $('.modeldescp').val(),
             summit: $('.summit').val()
         });
-
-
-        document.getElementById('delete').style.visibility = "hidden";
-        document.getElementById('edit').style.visibility = "hidden";
-        document.getElementById('history').style.visibility = "hidden";
-        document.getElementById('update').style.visibility = "hidden";
-        document.getElementById('btn_prev').style.visibility = "hidden";
-        document.getElementById('btn_next').style.visibility = "hidden";
-        document.getElementById('page').style.visibility = "hidden";
+        var newMessageRef = messagesRef2.child(pushkey);
+        newMessageRef.set({
+            a_serialNumber: $('.snumber').val(),
+            sapcode: $('.sapcode').val(),
+            materialcode: $('.materialcode').val(),
+            materialquantity: $('.materialquantity').val(),
+            ponumber: $('.ponumber').val(),
+            podate: $('.podate').val(),
+            invoiceDate: $('.invoicedate').val(),
+            invoiceNumber: $('.invoicenumber').val(),
+            receiveDate: $('.receivedate').val(),
+            model: $('.model').val(),
+            modelDescp: $('.modeldescp').val(),
+            summit: $('.summit').val(),
+        });
         window.alert("Submitted Successfully");
-        $('#capax')[0].reset();
-        $('#capaxdetails')[0].reset();
+        window.location.reload();
 
-
-        document.getElementById('exampleserailNumber_c').readOnly = false;
-        document.getElementById('btn_ret').disabled = false;
-        document.getElementById('exampleserailNumber').readOnly = true;
-        document.getElementById('exampleSapCode').readOnly = true;
-        document.getElementById('exampleMaterialCode').readOnly = true;
-        document.getElementById('exampleMaterialQuantity').readOnly = true;
-        document.getElementById('examplepoDate').readOnly = true;
-        document.getElementById('examplepoNumber').readOnly = true;
-        document.getElementById('exampleInvoiceDate').readOnly = true;
-        document.getElementById('exampleRecieveDate').readOnly = true;
-        document.getElementById('exampleModel').readOnly = true;
-        document.getElementById('exampleModelDescp').readOnly = true;
-        document.getElementById('exampleInvoiceNumber').readOnly = true
-        document.getElementById('exampleUpdateSummit').disabled = true;
+    } else {
+        console.log("not changed");
+        window.alert("No data changed");
     }
 });
 
+document.getElementById('delete').onclick = function () {
+    var messagesRef = firebase.database().ref('Capax');
+    var messagesRef2 = firebase.database().ref('Capax Details');
+    var cap, capd;
+    if (confirm("Are you sure want to delete ?")) {
+        messagesRef.child(document.getElementById('exampleserailNumber').value)
+            .on("child_added", function (data) {
+                pushkey = data.val().pushID;
+            });
+        console.log(pushkey);
+        messagesRef2.child(pushkey).remove();
+        messagesRef.child(document.getElementById('exampleserailNumber').value).child(pushkey).remove();
+        messagesRef.once("child_added").then(function (snapshot) {
+            cap = snapshot.child(document.getElementById('exampleserailNumber').value).child(pushkey).exists();
+        });
+        messagesRef2.once('value').then(function (snap) {
+            capd = snap.child(pushkey).exists();
+        });
+        if (cap == true && capd == true) {
+            console.log("Not removed");
+        } else {
+            console.log('Removed');
+            window.alert("Deleted Successfully.");
+            window, location.reload();
+        }
+    }
+}
 var current_page = 1;
 document.getElementById('history').onclick = function () {
     // document.getElementById('btn_prev').style.visibility = "visible";
