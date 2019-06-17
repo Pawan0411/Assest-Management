@@ -7,7 +7,11 @@
     "ejs-html": "^5.1.5",
     "express": "^4.17.1",
     "firebase": "^6.2.0",
+    "nodejs": "0.0.0",
     "requirejs": "^2.3.6"
+  },
+  "engines": {
+    "node": "8.11.1"
   },
   "devDependencies": {},
   "scripts": {
