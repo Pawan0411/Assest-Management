@@ -19,43 +19,34 @@ firebase.initializeApp(firebaseConfig);
 var dat_c;
 var dat_r;
 var newDate = new Date();
-fs.exists("/UltraTect_assets", function (exists) {
-    console.log("file exists ? " + exists);
-    if (!exists) {
-        fs.mkdir("/UltraTect_assets/revenue", (err) => {
-            if (err) throw err
-        });
-    }else{
-        var messagesRef = firebase.database().ref('Revenue Details');
-        messagesRef.on("value", function (data) {
-            dat_r = JSON.stringify(data);
-            console.log(dat_r);
-            fs.writeFile('/UltraTect_assets/revenue/Output-' + newDate.getDate().toString() + "-" +
-                (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
-                dat_r, (err) => {
-                    if (err) throw err;
-                })
-        
-        });
-    }
-    if (!exists) {
-        fs.mkdir("C:/UltraTect_assets/capax", (err) => {
-            if (err) throw err
-        });
-    }else{
-        var messagesRef = firebase.database().ref('Capax Details');
-        messagesRef.on("value", function (data) {
-            dat_c = JSON.stringify(data);
-            console.log(dat_c);
-            fs.writeFile('/UltraTect_assets/capax/Output-' + newDate.getDate().toString() + "-" +
-                (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
-                dat_c, (err) => {
-                    if (err) throw err;
-                })
-        
-        });
-    }
+var mkdirp = require('mkdirp');
+
+mkdirp('/data', function (err){
+    console.log(err);
+})
+var messagesRef = firebase.database().ref('Revenue Details');
+messagesRef.on("value", function (data) {
+    dat_r = JSON.stringify(data);
+    console.log(dat_r);
+    fs.writeFile('/data/Output-rev' + newDate.getDate().toString() + "-" +
+        (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
+        dat_r, (err) => {
+            if (err) throw err;
+        })
+
 });
+var messagesRef = firebase.database().ref('Capax Details');
+messagesRef.on("value", function (data) {
+    dat_c = JSON.stringify(data);
+    console.log(dat_c);
+    fs.writeFile('/data/Output-cap' + newDate.getDate().toString() + "-" +
+        (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
+        dat_c, (err) => {
+            if (err) throw err;
+        })
+
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/js"));
