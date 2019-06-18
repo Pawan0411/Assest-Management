@@ -22,7 +22,7 @@ var newDate = new Date();
 fs.exists("/UltraTect_assets", function (exists) {
     console.log("file exists ? " + exists);
     if (!exists) {
-        fs.mkdir("C:/UltraTect_assets/revenue", (err) => {
+        fs.mkdir("/UltraTect_assets/revenue", (err) => {
             if (err) throw err
         });
     }else{
@@ -30,7 +30,7 @@ fs.exists("/UltraTect_assets", function (exists) {
         messagesRef.on("value", function (data) {
             dat_r = JSON.stringify(data);
             console.log(dat_r);
-            fs.writeFile('C:/UltraTect_assets/revenue/Output-' + newDate.getDate().toString() + "-" +
+            fs.writeFile('/UltraTect_assets/revenue/Output-' + newDate.getDate().toString() + "-" +
                 (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
                 dat_r, (err) => {
                     if (err) throw err;
