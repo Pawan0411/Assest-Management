@@ -1,17 +1,4 @@
-var fs = require('fs');
-var mkdirp = require('mkdirp');
-var dat_c;
-var dat_r;
-var newDate = new Date();
 
-fs.exists('/data', function(exists){
-  console.log(exists);
-  if (!exists){
-     mkdirp('/data', function (err){
-          console.log(err);
-      })
-  }
-})
 var messagesRef = firebase.database().ref('Revenue Details');
 messagesRef.on("value", function (data) {
     dat_r = JSON.stringify(data);

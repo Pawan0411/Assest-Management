@@ -19,17 +19,35 @@ firebase.initializeApp(firebaseConfig);
 var dat_c;
 var dat_r;
 var newDate = new Date();
-
+// var mkdirp = require('mkdirp');
+// fs.exists('/data', function(exists){
+//     console.log(exists);
+//     if (!exists){
+//        mkdirp('/data', function (err){
+//             console.log(err);
+//         })
+//     }
+// })
 var messagesRef = firebase.database().ref('Revenue Details');
 messagesRef.on("value", function (data) {
     dat_r = JSON.stringify(data);
     console.log(dat_r);
+    fs.writeFile('data/Output-rev' + newDate.getDate().toString() + "-" +
+        (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
+        dat_r, (err) => {
+            if (err) throw err;
+        })
 
 });
 var messagesRef = firebase.database().ref('Capax Details');
 messagesRef.on("value", function (data) {
     dat_c = JSON.stringify(data);
     console.log(dat_c);
+    fs.writeFile('data/Output-cap' + newDate.getDate().toString() + "-" +
+        (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
+        dat_c, (err) => {
+            if (err) throw err;
+        })
 
 });
 
@@ -58,7 +76,7 @@ app.get('/search_r', (req, res) => res.render('search_r'));
 // })
 
 // HEROKU
-app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
+// app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
 
 // LOCAL
-// app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
