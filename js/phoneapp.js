@@ -19,7 +19,7 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button',
     console.log(response)
   }
 });
-var phoneNumber = '+918462935367';
+var phoneNumber = '+919977700193';
 var appVerifier = window.recaptchaVerifier;
 firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
   .then(function (confirmationResult) {
