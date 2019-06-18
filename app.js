@@ -19,12 +19,25 @@ firebase.initializeApp(firebaseConfig);
 var dat_c;
 var dat_r;
 var newDate = new Date();
-
+fs.exists("C:/UltraTect_assets/revenue",function(exists) {
+    console.log("file exists ? " + exists);
+    if (!exists){
+        fs.mkdir("C:/UltraTect_assets/revenue", (err) => {
+            if (err) throw err});
+        }
+});
+fs.exists("C:/UltraTect_assets/capax",function(exists) {
+    console.log("file exists ? " + exists);
+    if (!exists){
+        fs.mkdir("C:/UltraTect_assets/capax", (err) => {
+            if (err) throw err});
+        }
+});
 var messagesRef = firebase.database().ref('Revenue Details');
 messagesRef.on("value", function (data) {
      dat_r = JSON.stringify(data);
      console.log(dat_r);
-    fs.writeFile('data/revenue/Output-' + newDate.getDate().toString() + "-" +
+    fs.writeFile('C:/UltraTect_assets/revenue/Output-' + newDate.getDate().toString() + "-" +
     (newDate.getMonth()+1).toString() + "-" + newDate.getFullYear().toString() + ".json", 
     dat_r , (err) => {
         if (err) throw err;
@@ -36,7 +49,7 @@ var messagesRef = firebase.database().ref('Capax Details');
 messagesRef.on("value", function (data) {
      dat_c = JSON.stringify(data);
      console.log(dat_c);
-    fs.writeFile('data/capax/Output-' + newDate.getDate().toString() + "-" +
+    fs.writeFile('C:/UltraTect_assets/capax/Output-' + newDate.getDate().toString() + "-" +
     (newDate.getMonth()+1).toString() + "-" + newDate.getFullYear().toString() + ".json", 
     dat_c , (err) => {
         if (err) throw err;
