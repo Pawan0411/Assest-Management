@@ -19,7 +19,7 @@ firebase.initializeApp(firebaseConfig);
 var dat_c;
 var dat_r;
 var newDate = new Date();
-fs.exists("C:/UltraTect_assets", function (exists) {
+fs.exists("/UltraTect_assets", function (exists) {
     console.log("file exists ? " + exists);
     if (!exists) {
         fs.mkdir("C:/UltraTect_assets/revenue", (err) => {
