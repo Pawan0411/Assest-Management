@@ -76,7 +76,7 @@ app.get('/search_r', (req, res) => res.render('search_r'));
 // })
 
 // HEROKU
-// app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
+app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
 
 // LOCAL
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+// app.listen(port, () => console.log(`Example app listening on port ${port}!`))
