@@ -47,7 +47,7 @@ fs.exists("/UltraTect_assets", function (exists) {
         messagesRef.on("value", function (data) {
             dat_c = JSON.stringify(data);
             console.log(dat_c);
-            fs.writeFile('C:/UltraTect_assets/capax/Output-' + newDate.getDate().toString() + "-" +
+            fs.writeFile('/UltraTect_assets/capax/Output-' + newDate.getDate().toString() + "-" +
                 (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
                 dat_c, (err) => {
                     if (err) throw err;
