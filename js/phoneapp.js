@@ -1,26 +1,28 @@
 
 var code = document.getElementById('inputPassword').value = "";
-const firebaseConfig = {
-  apiKey: "AIzaSyDMXaX8AR8MKDoZohHewzphFERUEubVm0Y",
-  authDomain: "assests-managment.firebaseapp.com",
-  databaseURL: "https://assests-managment.firebaseio.com",
-  projectId: "assests-managment",
-  storageBucket: "assests-managment.appspot.com",
-  messagingSenderId: "429074630365",
-  appId: "1:429074630365:web:62f74225288877aa"
+var firebaseConfig = {
+  apiKey: "AIzaSyDHPQABwRgvKJN8MvhYcRZm0JxPd5bkFJY",
+  authDomain: "assets-management-63d76.firebaseapp.com",
+  databaseURL: "https://assets-management-63d76.firebaseio.com",
+  projectId: "assets-management-63d76",
+  storageBucket: "",
+  messagingSenderId: "756678919331",
+  appId: "1:756678919331:web:5842f2ddd98ada44"
 };
-
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
   'size': 'invisible',
   'callback': function (response) {
     // reCAPTCHA solved, allow signInWithPhoneNumber.
-   // onSignInSubmit();
+   //onSignInSubmit();
     console.log(response)
   }
 });
-var phoneNumber = '+918462935367';
+var phoneNumber = '+919131341690';
 var appVerifier = window.recaptchaVerifier;
+
 firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
   .then(function (confirmationResult) {
     // SMS sent. Prompt user to type the code from the message, then sign the

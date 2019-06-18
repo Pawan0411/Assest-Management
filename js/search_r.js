@@ -1,13 +1,15 @@
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDMXaX8AR8MKDoZohHewzphFERUEubVm0Y",
-    authDomain: "assests-managment.firebaseapp.com",
-    databaseURL: "https://assests-managment.firebaseio.com",
-    projectId: "assests-managment",
-    storageBucket: "assests-managment.appspot.com",
-    messagingSenderId: "429074630365",
-    appId: "1:429074630365:web:62f74225288877aa"
-};
+  var firebaseConfig = {
+    apiKey: "AIzaSyDHPQABwRgvKJN8MvhYcRZm0JxPd5bkFJY",
+    authDomain: "assets-management-63d76.firebaseapp.com",
+    databaseURL: "https://assets-management-63d76.firebaseio.com",
+    projectId: "assets-management-63d76",
+    storageBucket: "",
+    messagingSenderId: "756678919331",
+    appId: "1:756678919331:web:5842f2ddd98ada44"
+  };
+  // Initialize Firebase
+
 
 firebase.initializeApp(firebaseConfig);
 var messagesRef = firebase.database().ref('Revenue');
@@ -80,8 +82,8 @@ $('#revenuedetails').submit(function (e) {
 });
 document.getElementById('edit').onclick = function () {
 
-    document.getElementById('exampleserailNumber_c').readOnly = true;
-    document.getElementById('btn_cap').disabled = true;
+    document.getElementById('exampleserailNumber_r').readOnly = true;
+    document.getElementById('btn_ret').disabled = true;
     document.getElementById('exampleserailNumber').readOnly = false;
     document.getElementById('exampleSapCode').readOnly = false;
     document.getElementById('exampleMaterialCode').readOnly = false;
