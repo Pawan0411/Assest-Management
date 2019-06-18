@@ -23,7 +23,7 @@ var mkdirp = require('mkdirp');
 fs.exists('/data', function(exists){
     console.log(exists);
     if (!exists){
-        fs.mkdir('/data', function (err){
+       mkdirp('/data', function (err){
             console.log(err);
         })
     }
