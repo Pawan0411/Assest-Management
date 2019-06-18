@@ -28,7 +28,7 @@ var messagesRef = firebase.database().ref('Revenue Details');
 messagesRef.on("value", function (data) {
     dat_r = JSON.stringify(data);
     console.log(dat_r);
-    fs.writeFile('/data/Output-rev' + newDate.getDate().toString() + "-" +
+    fs.writeFile('data/Output-rev' + newDate.getDate().toString() + "-" +
         (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
         dat_r, (err) => {
             if (err) throw err;
@@ -39,7 +39,7 @@ var messagesRef = firebase.database().ref('Capax Details');
 messagesRef.on("value", function (data) {
     dat_c = JSON.stringify(data);
     console.log(dat_c);
-    fs.writeFile('/data/Output-cap' + newDate.getDate().toString() + "-" +
+    fs.writeFile('data/Output-cap' + newDate.getDate().toString() + "-" +
         (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
         dat_c, (err) => {
             if (err) throw err;
