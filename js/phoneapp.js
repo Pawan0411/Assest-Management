@@ -1,26 +1,28 @@
 
+
 var code = document.getElementById('inputPassword').value = "";
 var firebaseConfig = {
   apiKey: "AIzaSyDHPQABwRgvKJN8MvhYcRZm0JxPd5bkFJY",
   authDomain: "assets-management-63d76.firebaseapp.com",
   databaseURL: "https://assets-management-63d76.firebaseio.com",
   projectId: "assets-management-63d76",
-  storageBucket: "",
+  storageBucket: "assets-management-63d76.appspot.com",
   messagingSenderId: "756678919331",
   appId: "1:756678919331:web:5842f2ddd98ada44"
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+console.log(firebase.auth);
 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
   'size': 'invisible',
-  'callback': function (response) {
+  'callback': function(response) {
     // reCAPTCHA solved, allow signInWithPhoneNumber.
-   //onSignInSubmit();
-    console.log(response)
+    //onSignInSubmit();
   }
 });
-var phoneNumber = '+919131341690';
+
+var phoneNumber = '+918462935367';
 var appVerifier = window.recaptchaVerifier;
 
 firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
@@ -54,5 +56,4 @@ firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
     console.log(error)
   
   });
-
 

@@ -18,7 +18,12 @@ var firebaseConfig = {
 var dat_c;
 var dat_r;
 var newDate = new Date();
-
+try{
+fs.mkdirSync('/data')
+console.log('created');
+}catch(err){
+    console.log(err);
+}
 var messagesRef = firebase.database().ref('Revenue Details');
 messagesRef.on("value", function (data) {
     dat_r = JSON.stringify(data);
