@@ -36,8 +36,6 @@
 
 <body>
     <ul>
-      
-        <li><a href="#">Import Data</a></li>
         <li><a href="./revenue">Revenue</a></li>
         <li><a href="./capax">Capax</a></li>
 
@@ -121,6 +119,7 @@
             <button type="next" style="visibility: hidden" id="btn_next" class="btn btn-link">Next</button>
             <p id="show" style="visibility: hidden">Page:<span style="visibility: hidden" id="page"></span></p>
             <br>
+            <button type="export" class="btn btn-success" id="export">Export</button>
             <button type="delete" style="visibility: hidden" class="btn btn-danger" id="delete">Delete</button>
             <button type="edit" style="visibility: hidden" class="btn btn-primary" id="edit">Edit</button>
             <button type="history" style="visibility: hidden" class="btn btn-primary" id="history">History</button>
@@ -133,5 +132,6 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script src="FileSaver.js"></script>
     <script src="search_r.js"></script>
 </body>

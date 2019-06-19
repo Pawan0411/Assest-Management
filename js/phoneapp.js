@@ -3,24 +3,24 @@
 var code = document.getElementById('inputPassword').value = "";
   // Your web app's Firebase configuration
   var firebaseConfig = {
-    apiKey: "AIzaSyDMXaX8AR8MKDoZohHewzphFERUEubVm0Y",
-    authDomain: "assests-managment.firebaseapp.com",
-    databaseURL: "https://assests-managment.firebaseio.com",
-    projectId: "assests-managment",
-    storageBucket: "assests-managment.appspot.com",
-    messagingSenderId: "429074630365",
-    appId: "1:429074630365:web:62f74225288877aa"
+    apiKey: "AIzaSyAX6nl15R1Vm5ofZi5j3b8_aqdECFKTKi8",
+    authDomain: "assets-management-f7361.firebaseapp.com",
+    databaseURL: "https://assets-management-f7361.firebaseio.com",
+    projectId: "assets-management-f7361",
+    storageBucket: "",
+    messagingSenderId: "662080556439",
+    appId: "1:662080556439:web:8f6c873bee5384e1"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+
 
 
 console.log(firebase.auth);
 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
   'size': 'invisible',
   'callback': function(response) {
-    // reCAPTCHA solved, allow signInWithPhoneNumber.
-    //onSignInSubmit();
+    console.log(response)
   }
 });
 
@@ -29,9 +29,8 @@ var appVerifier = window.recaptchaVerifier;
 
 firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
   .then(function (confirmationResult) {
-    // SMS sent. Prompt user to type the code from the message, then sign the
-    // user in with confirmationResult.confirm(code).
     window.confirmationResult = confirmationResult;
+    window.alert('Code Sent')
     console.log('Code Sent')
     document.getElementById('resend').disabled = false;
     document.getElementById('resend').onclick = function(){
@@ -50,8 +49,6 @@ firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
         console.log(error);
         window.alert(error);
       });
-      // var credential = firebase.auth.PhoneAuthProvider.credential(confirmationResult.verificationId, code);
-      // firebase.auth().signInWithCredential(credential);
     }
   }).catch(function (error) {
     // Error; SMS not sent

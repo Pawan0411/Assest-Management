@@ -5,13 +5,13 @@ const port = 3000;
 var fs = require('fs');
 var firebase = require('firebase');
 var firebaseConfig = {
-    apiKey: "AIzaSyDMXaX8AR8MKDoZohHewzphFERUEubVm0Y",
-    authDomain: "assests-managment.firebaseapp.com",
-    databaseURL: "https://assests-managment.firebaseio.com",
-    projectId: "assests-managment",
-    storageBucket: "assests-managment.appspot.com",
-    messagingSenderId: "429074630365",
-    appId: "1:429074630365:web:62f74225288877aa"
+    apiKey: "AIzaSyAX6nl15R1Vm5ofZi5j3b8_aqdECFKTKi8",
+    authDomain: "assets-management-f7361.firebaseapp.com",
+    databaseURL: "https://assets-management-f7361.firebaseio.com",
+    projectId: "assets-management-f7361",
+    storageBucket: "",
+    messagingSenderId: "662080556439",
+    appId: "1:662080556439:web:8f6c873bee5384e1"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
@@ -19,32 +19,26 @@ var firebaseConfig = {
 var dat_c;
 var dat_r;
 var newDate = new Date();
-try{
-fs.mkdirSync('/data')
-console.log('created');
-}catch(err){
-    console.log(err);
-}
 var messagesRef = firebase.database().ref('Revenue Details');
 messagesRef.on("value", function (data) {
     dat_r = JSON.stringify(data);
     console.log(dat_r);
-    fs.writeFile('data/Output-rev' + newDate.getDate().toString() + "-" +
-        (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
-        dat_r, (err) => {
-            if (err) throw err;
-        })
+    // fs.writeFile('data/Output-rev' + newDate.getDate().toString() + "-" +
+    //     (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
+    //     dat_r, (err) => {
+    //         if (err) throw err;
+    //     })
 
 });
 var messagesRef = firebase.database().ref('Capax Details');
 messagesRef.on("value", function (data) {
     dat_c = JSON.stringify(data);
     console.log(dat_c);
-    fs.writeFile('data/Output-cap' + newDate.getDate().toString() + "-" +
-        (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
-        dat_c, (err) => {
-            if (err) throw err;
-        })
+    // fs.writeFile('data/Output-cap' + newDate.getDate().toString() + "-" +
+    //     (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
+    //     dat_c, (err) => {
+    //         if (err) throw err;
+    //     })
 
 });
 
@@ -73,7 +67,7 @@ app.get('/search_r', (req, res) => res.render('search_r'));
 // })
 
 // HEROKU
-app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
+// app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
 
 // LOCAL
-// app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))

@@ -1,12 +1,12 @@
   // Your web app's Firebase configuration
   var firebaseConfig = {
-    apiKey: "AIzaSyDMXaX8AR8MKDoZohHewzphFERUEubVm0Y",
-    authDomain: "assests-managment.firebaseapp.com",
-    databaseURL: "https://assests-managment.firebaseio.com",
-    projectId: "assests-managment",
-    storageBucket: "assests-managment.appspot.com",
-    messagingSenderId: "429074630365",
-    appId: "1:429074630365:web:62f74225288877aa"
+    apiKey: "AIzaSyAX6nl15R1Vm5ofZi5j3b8_aqdECFKTKi8",
+    authDomain: "assets-management-f7361.firebaseapp.com",
+    databaseURL: "https://assets-management-f7361.firebaseio.com",
+    projectId: "assets-management-f7361",
+    storageBucket: "",
+    messagingSenderId: "662080556439",
+    appId: "1:662080556439:web:8f6c873bee5384e1"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
@@ -39,7 +39,6 @@ $('#capaxdetails').submit(function (e) {
             document.getElementById('history').style.visibility = "hidden";
             document.getElementById('exampleserailNumber_c').value = "";
         } else {
-            window.alert("Retrived  Succesfully");
             messagesRef.child(document.getElementById('exampleserailNumber_c').value)
             .on("child_added", function (data) {
                 console.log(JSON.stringify(data.val()));
@@ -77,7 +76,7 @@ $('#capaxdetails').submit(function (e) {
                 document.getElementById('edit').style.visibility = "visible";
                 document.getElementById('history').style.visibility = "visible";
 
-            });
+            })
         }
     });
 
@@ -118,7 +117,6 @@ $('#capax').submit(function (e) {
         var messagesRef2 = firebase.database().ref('Capax Details');
         var newMessageRef = messagesRef1.child(document.getElementById('exampleserailNumber').value).push();
         pushkey = newMessageRef.key;
-        try{
         newMessageRef.set({
             pushID: pushkey,
             serialNumber: $('.snumber').val(),
@@ -133,11 +131,11 @@ $('#capax').submit(function (e) {
             model: $('.model').val(),
             modelDescp: $('.modeldescp').val(),
             summit: $('.summit').val()
-        });
-    }
-        catch(error){
-            window.alert(error);
-        }
+        }).then( (result) => {
+            window.alert("Submitted Successfully.")
+            console.log("Submit to Firebase");
+            window.location.reload();
+        })
         var newMessageRef = messagesRef2.child(pushkey);
         newMessageRef.set({
             a_serialNumber: $('.snumber').val(),
@@ -152,9 +150,12 @@ $('#capax').submit(function (e) {
             model: $('.model').val(),
             modelDescp: $('.modeldescp').val(),
             summit: $('.summit').val(),
-        });
-        window.alert("Submitted Successfully");
-        window.location.reload();
+        }).then( (result) => {
+            window.alert("Submitted Successfully.")
+            console.log("Submit to Firebase");
+            window.location.reload();
+        })
+        
 
     } else {
         console.log("not changed");
