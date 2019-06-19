@@ -51,7 +51,7 @@ $('#revenuedetails').submit(function (e) {
         model: $('.model_r').val(),
         modelDescp: $('.modeldescp_r').val(),
     }).then( (result) => {
-        window.alert("Submitted Successfully.")
+       
         console.log("Submit to Firebase");
         $('#revenuedetails')[0].reset();
     })

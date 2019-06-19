@@ -151,7 +151,7 @@ $('#capax').submit(function (e) {
             modelDescp: $('.modeldescp').val(),
             summit: $('.summit').val(),
         }).then( (result) => {
-            window.alert("Submitted Successfully.")
+         
             console.log("Submit to Firebase");
             window.location.reload();
         })

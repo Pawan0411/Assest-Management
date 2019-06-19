@@ -14,6 +14,7 @@ var newDate = new Date();
 
 
 var messagesRef = firebase.database().ref('Revenue');
+var messagesRef2 = firebase.database().ref('Revenue Details');
 var events = [];
 var i = 0;
 var pushkey;
@@ -79,14 +80,15 @@ $('#revenuedetails').submit(function (e) {
     });
 
 });
+
+messagesRef2.on("value", function (data) {
 document.getElementById('export').onclick =  function() {
-    var text = "HEllo";
     var filename = "Output - " + newDate.getDate().toString() + "-" +
-        (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString();
-    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() ;
+    var blob = new Blob([JSON.stringify(data.val())], {type: "text/plain;charset=utf-8"});
     saveAs(blob, filename+".json");
   }
-  
+});
 document.getElementById('edit').onclick = function () {
 
     document.getElementById('exampleserailNumber_r').readOnly = true;
@@ -118,7 +120,7 @@ $('#revenue').submit(function (e) {
     if ($('#revenue').data('changed')) {
         console.log("changed");
         var messagesRef1 = firebase.database().ref('Revenue');
-        var messagesRef2 = firebase.database().ref('Revenue Details');
+     
         var newMessageRef = messagesRef1.child(document.getElementById('exampleserailNumber').value).push();
         pushkey = newMessageRef.key;
         newMessageRef.set({
@@ -152,7 +154,7 @@ $('#revenue').submit(function (e) {
         model: $('.model').val(),
         modelDescp: $('.modeldescp').val()
         }).then( (result) => {
-            window.alert("Submitted Successfully")
+        
             console.log("Submitted");
             window.location.reload();
         })
