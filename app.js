@@ -16,41 +16,76 @@ var firebaseConfig = {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
 
-var dat_c;
-var dat_r;
-var newDate = new Date();
-var messagesRef = firebase.database().ref('Revenue Details');
-messagesRef.on("value", function (data) {
-    dat_r = JSON.stringify(data);
-    console.log(dat_r);
-    // fs.writeFile('data/Output-rev' + newDate.getDate().toString() + "-" +
-    //     (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
-    //     dat_r, (err) => {
-    //         if (err) throw err;
-    //     })
+// var messagesRef = firebase.database().ref('Revenue Details');
+// messagesRef.on("value", function (data) {
+//     dat_r = JSON.stringify(data);
+//     console.log(dat_r);
+// });
+// var messagesRef = firebase.database().ref('Capax Details');
+// messagesRef.on("value", function (data) {
+//     dat_c = JSON.stringify(data);
+//     console.log(dat_c);
+// });
 
-});
-var messagesRef = firebase.database().ref('Capax Details');
-messagesRef.on("value", function (data) {
-    dat_c = JSON.stringify(data);
-    console.log(dat_c);
-    // fs.writeFile('data/Output-cap' + newDate.getDate().toString() + "-" +
-    //     (newDate.getMonth() + 1).toString() + "-" + newDate.getFullYear().toString() + ".json",
-    //     dat_c, (err) => {
-    //         if (err) throw err;
-    //     })
+//mongoose Setup
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/assets');
 
-});
+var db = mongoose.connection;
+db.on('error', console.log.bind(console, "Connection error"));
+db.once('open', function (callback){
+  console.log('Connection Succeded');
+})
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/js"));
 app.use(express.static(__dirname + "/css"));
-
 app.set('view engine', 'ejs');
+
+app.get('/capax', (req, res) => res.render('capax'));
+
+app.post('/capax_save', function (req, res){
+  var serialNumber = req.body.exampleserailNumber; 
+  var sapCode = req.body.exampleSapCode; 
+  var materialCode = req.body.exampleMaterialCode; 
+  var materialQuantity = req.body.exampleMaterialQuantity;
+  var poDate = req.body.exampleexamplepoDate;
+  var poNum = req.body.examplepoNumber;
+  var invoiceDate = req.body.exampleInvoiceDate;
+  var invoiceNumber = req.body.exampleInvoiceNumber;
+  var receiveDate = req.body.exampleRecieveDate;
+  var model = req.body.exampleModel;
+  var modelDesp = req.body.exampleModelDescp;
+  var summit = req.body.exampleUpdateSummit; 
+
+  var data = { 
+   "serialNumber": serialNumber,
+   "sapCode": sapCode,
+   "materialCode": materialCode,
+   "materialQuantity": materialQuantity, 
+   "poDate": poDate,
+   "poNum": poNum,
+   "invoiceDate": invoiceDate,
+   "invoiceNumber": invoiceNumber,
+   "receiveDate":receiveDate,
+   "model": model,
+   "modelDesp":modelDesp,
+   "summit":summit
+} 
+
+res.json(data);
+db.collection('Capax Assets Details').insertOne(data,function(err, collection){ 
+  if (err) throw err; 
+  console.log("Record inserted Successfully"); 
+   console.log(collection);     
+}); 
+})
+
+
 app.get('/', (req, res) => res.render('index'));
 app.get('/index', (req, res) => res.render('index'));
-app.get('/capax', (req, res) => res.render('capax'));
+
 app.get('/revenue', (req, res) => res.render('revenue'));
 app.get('/search_c', (req, res) => res.render('search_c'));
 app.get('/search_r', (req, res) => res.render('search_r'));
@@ -65,6 +100,8 @@ app.get('/search_r', (req, res) => res.render('search_r'));
 //     });
 //     res.send(req.params.id);
 // })
+
+
 
 // HEROKU
 // app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
