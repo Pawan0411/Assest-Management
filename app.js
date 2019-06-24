@@ -3,6 +3,13 @@ const app = express();
 var bodyParser = require('body-parser');
 const port = 3000;
 var json = require('./assets/example_1.json');
+const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
+const crypto = require('crypto');
+const methodOverride = require('method-override');
+const path = require('path');
+
 
 
 // var fs = require('fs');
@@ -33,7 +40,8 @@ var json = require('./assets/example_1.json');
 //mongoose Setup
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-mongoose.connect('mongodb://localhost:27017/assets');
+const mongoURI = 'mongodb://localhost:27017/assets';
+mongoose.connect(mongoURI);
 
 var db = mongoose.connection;
 db.on('error', console.log.bind(console, "Connection error"));
@@ -41,13 +49,85 @@ db.once('open', function (callback) {
   console.log('Connection Succeded');
 })
 
+// Create mongo connection
+const conn = mongoose.createConnection(mongoURI);
+
+// Init gfs
+let gfs;
+
+conn.once('open', () => {
+  // Init stream
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads');
+});
+
+// Create storage engine
+const storage = new GridFsStorage({
+  url: mongoURI,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        const filename = buf.toString('hex') + path.extname(file.originalname);
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'uploads'
+        };
+        resolve(fileInfo);
+      });
+    });
+  }
+});
+const upload = multer({ storage });
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  // res.json({ file: req.file });
+  console.log("Uploaded")
+  console.log(JSON.stringify(req.file))
+  res.redirect('/');
+});
+
+app.get('/files', (req, res) => {
+  gfs.files.find().toArray((err, files) => {
+    // Check if files
+    if (!files || files.length === 0) {
+      return res.status(404).json({
+        err: 'No files exist'
+      });
+    }
+
+    // Files exist
+    return res.json(files);
+  });
+});
+
+app.get('/files/:filename', (req, res) => {
+  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    // Check if file
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: 'No file exists'
+      });
+    }
+    // File exists
+    return res.json(file);
+  });
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/js"));
 app.use(express.static(__dirname + "/css"));
 app.set('view engine', 'ejs');
 
-
+app.get("/u", (req, res) => {
+  res.render("u.ejs")
+})
+app.get("/r", (req, res) => {
+  res.render("r.ejs")
+})
 app.post('/capax_save', function (req, res) {
   var serialNumber = req.body.exampleserailNumber;
   var sapCode = req.body.exampleSapCode;
@@ -83,24 +163,46 @@ app.post('/capax_save', function (req, res) {
   });
 })
 var datas = [];
-app.post('/capax_search', function (req, res){
+app.post('/capax_search', function (req, res) {
   var serialnum = req.body.exampleserailNumber_c
   console.log(serialnum);
-  db.collection('Capax').findOne({"serialNumber":serialnum})
-  .then(function (result){
+  db.collection('Capax').findOne({ "serialNumber": serialnum })
+    .then(function (result) {
       console.log(result);
       datas = result;
       res.redirect('/c');
+    })
 })
-})
+const collection = db.collection('uploads.files');    
+const collectionChunks = db.collection('uploads.chunks');
 
-/*Please Check this one too*/ 
-app.get('/c', function (req, res){
+app.post('/retrive', function (req, res){
+
+  /*Getting all the data here */
+    collectionChunks.findOne({"n":0})
+    .then(function (results){
+      console.log(results);
+      res.redirect('/');
+    }) 
+ 
+    /*trying to get the specifc data => null */
+      collectionChunks.findOne({"data.invoiceDate":"2019-06-03"})
+        .then(function (results){
+          console.log(results);
+          res.redirect('/');
+        })   
+
+        /*If I need to convert the data to base64 Jus ping me don't do it,
+         I want to complete the export data part myself */
+    
+  });
+/*Please Check this one too*/
+app.get('/c', function (req, res) {
   console.log(datas.sapCode); //WOrking
   var se = datas.serialNumber;
-  res.render('search_c',{exampleserailNumber  : se}); //Undefined 
+  res.render('search_c', { exampleserailNumber: se }); //Undefined 
 })
-  
+
 app.get('/', (req, res) => res.render('index'));
 app.get('/index', (req, res) => res.render('index'));
 app.get('/capax', (req, res) => res.render('capax'));
