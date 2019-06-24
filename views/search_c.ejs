@@ -50,21 +50,22 @@
 
             <fieldset>
                 <legend>Capax</legend>
-                <form id="capaxdetails">
+                <input type="file" id="fileUpload">
+                <form id="capaxdetails" action="/capax_search" method="POST">
                     <div class="form-group">
-                        <label for="exampleserailNumber_c">Serial Number</label>
-                        <input type="text" class="form-control snumber_c" id="exampleserailNumber_c"
-                            placeholder="Enter Serial Number" autocomplete="off">
+                        <label for="exampleserailNumber">Serial Number</label>
+                        <input type="text" class="form-control snumber" name="exampleserailNumber_c"
+                            id="exampleserailNumber_c" placeholder="Enter Serial Number" autocomplete="off" required>
                     </div>
                     <button type="submit" class="btn btn-primary" id="btn_cap">Retrive</button>
                     <br>
                     <br>
                 </form>
-                <form id="capax">
+                <form id="capax" action="/c" method="GET">
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
-                        <input type="text" readonly="readonly" class="form-control snumber" id="exampleserailNumber"
-                            placeholder="Enter Serial Number" autocomplete="off">
+                        <input type="text" readonly="readonly" class="form-control snumber" name="exampleserailNumber"
+                            id="exampleserailNumber" placeholder="Enter Serial Number" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <div class="form-group">
@@ -120,15 +121,14 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleUpdateSummit">Updated In Summit</label>
-                            <select disabled="disabled" class="form-control summit" id="exampleUpdateSummit"
-                                autocomplete="off">
+                            <select disabled="disabled" class="form-control summit" name="exampleUpdateSummit"
+                                id="exampleUpdateSummit" autocomplete="off">
                                 <option value="" disabled selected>Select</option>
                                 <option value="YES">YES</option>
                                 <option value="NO">NO</option>
                             </select>
                         </div>
-                        <button type="update" style="visibility: hidden" class="btn btn-success"
-                            id="update">Update</button>
+                        <button type="update" class="btn btn-success" id="update">Update</button>
                 </form>
                 <br>
             </fieldset>
@@ -143,14 +143,13 @@
 
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-        <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
 
-        <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
     <script src="search_c.js"></script>
 </body>

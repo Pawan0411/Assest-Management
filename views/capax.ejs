@@ -52,63 +52,63 @@
                 <form id="capaxdetails" action="/capax_save" method="POST">
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
-                        <input type="text" class="form-control snumber" id="exampleserailNumber"
+                        <input type="text" class="form-control snumber" name="exampleserailNumber" id="exampleserailNumber"
                             placeholder="Enter Serial Number" autocomplete="off" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleSapCode">Sap Code</label>
-                        <input type="text" class="form-control sapcode" id="exampleSapCode" placeholder="Enter Sap Code"
+                        <input type="text" class="form-control sapcode" name="exampleSapCode" id="exampleSapCode" placeholder="Enter Sap Code"
                             autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="exampleMaterialCode">Material Code</label>
-                        <input type="text" class="form-control materialcode" id="exampleMaterialCode"
+                        <input type="text" class="form-control materialcode" name="exampleMaterialCode" id="exampleMaterialCode"
                             placeholder="Enter Material Code" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="exampleMaterialQuantity">Material Quantity</label>
-                        <input type="number" class="form-control materialquantity" id="exampleMaterialQuantity"
+                        <input type="number" class="form-control materialquantity" name="exampleMaterialQuantity" id="exampleMaterialQuantity"
                             placeholder="Enter Material Quantity" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="examplepoNumber">PO Number</label>
-                        <input type="text" class="form-control ponumber" id="examplepoNumber"
+                        <input type="text" class="form-control ponumber" name="examplepoNumber" id="examplepoNumber"
                             placeholder="Enter PO Number" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="examplepoDate">PO Date</label>
-                        <input type="date" class="form-control podate" id="examplepoDate"
+                        <input type="date" class="form-control podate" name="examplepoDate" id="examplepoDate"
                             placeholder="Enter PO Date" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="exampleInvoiceDate">Invoice Date</label>
-                        <input type="date" class="form-control invoicedate" id="exampleInvoiceDate" autocomplete="off"
+                        <input type="date" class="form-control invoicedate" name="exampleInvoiceDate" id="exampleInvoiceDate" autocomplete="off"
                             >
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInvoiceNumber">Invoice Number</label>
-                        <input type="number" class="form-control invoicenumber" id="exampleInvoiceNumber"
+                        <input type="number" class="form-control invoicenumber" name="exampleInvoiceNumber" id="exampleInvoiceNumber"
                             placeholder="Enter Invoice Number" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="exampleRecieveDate">Receive Date</label>
-                        <input type="date" class="form-control receivedate" id="exampleRecieveDate" autocomplete="off"
+                        <input type="date" class="form-control receivedate" name="exampleRecieveDate" id="exampleRecieveDate" autocomplete="off"
                             >
                     </div>
                     <div class="form-group">
                         <label for="exampleModel">Model</label>
-                        <input type="text" class="form-control model" id="exampleModel" autocomplete="off"
+                        <input type="text" class="form-control model" name="exampleModel" id="exampleModel" autocomplete="off"
                             placeholder="Enter Model">
                     </div>
                     <div class="form-group">
                         <label for="exampleModelDescp">Model Description</label>
                         <textarea rows="6" cols="70" type="textarea" class="form-control modeldescp"
-                            id="exampleModelDescp" autocomplete="off" placeholder="Enter Model Description"> </textarea>
+                          name="exampleModelDescp"  id="exampleModelDescp" autocomplete="off" placeholder="Enter Model Description"> </textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleUpdateSummit">Updated In Summit</label>
-                        <select class="form-control summit" id="exampleUpdateSummit" autocomplete="off"
+                        <select class="form-control summit" name="exampleUpdateSummit" id="exampleUpdateSummit" autocomplete="off"
                             placeholder="Enter Sap Code">
                             <option value="" disabled selected>Select</option>
                             <option value="YES">YES</option>
@@ -129,5 +129,5 @@
         <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
 
         <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
-    <!-- <script src="app_c.js"></script> -->
+    <script src="app_c.js"></script>
 </body>
