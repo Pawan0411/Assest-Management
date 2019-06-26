@@ -53,11 +53,24 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage });
 
+var Schema = mongoose.Schema;
+var capaxSchema = new Schema({ name: String }, { strict: false });
+var Capax = mongoose.model('Capax', capaxSchema);
+
+
 app.post('/upload', upload.single('file'), (req, res) => {
-  // res.json({ file: req.file });
-  console.log("Uploaded")
-  console.log(JSON.stringify(req.file))
-  res.redirect('/');
+  const chunks = [];
+  const readStream = gfs.createReadStream(req.file.id);
+  readStream.on("data", function (chunk) {
+    chunks.push(chunk);
+  });
+  readStream.on("end", function () {
+    Buffer.concat(chunks)
+    let json = chunks.toString('utf-8')
+    var data = new Capax({ json });
+    data.save()
+    res.redirect('/')
+  })
 });
 
 app.get('/files', (req, res) => {
@@ -141,7 +154,7 @@ app.post('/capax_search', function (req, res) {
     .then(function (result) {
       console.log(result);
       datas = result;
-      
+
       res.redirect('/c');
     })
 
@@ -155,7 +168,7 @@ app.post('/capax_del', function (req, res) {
     })
 })
 
-app.post('/capax_edit', function (req, res){
+app.post('/capax_edit', function (req, res) {
   res.redirect('/capax');
   console.log(datas.serialNumber);
   // res.render('/capax', { exampleserailNumber: serialnum });
@@ -192,8 +205,10 @@ app.post('/retrive', function (req, res) {
 app.get('/c', function (req, res) {
   // console.log(datas.sapCode); //WOrking
   // var se = datas.serialNumber;
-  res.render('search_c', { exampleserailNumber: datas.serialNumber,
-    exampleSapCode : datas.sapCode });
+  res.render('search_c', {
+    exampleserailNumber: datas.serialNumber,
+    exampleSapCode: datas.sapCode
+  });
 })
 
 app.get('/', (req, res) => res.render('index'));
