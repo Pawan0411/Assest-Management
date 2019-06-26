@@ -50,7 +50,7 @@
 
             <fieldset>
                 <legend>Capax</legend>
-                <input type="file" id="fileUpload">
+                
                 <form id="capaxdetails" action="/capax_search" method="POST">
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
@@ -65,13 +65,13 @@
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
                         <input type="text" readonly="readonly" class="form-control snumber" name="exampleserailNumber"
-                            id="exampleserailNumber" placeholder="Enter Serial Number" autocomplete="off">
+                         value="<% exampleserailNumber %>"   id="exampleserailNumber" placeholder="Enter Serial Number" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <div class="form-group">
                             <label for="exampleSapCode">Sap Code</label>
                             <input type="text" readonly="readonly" class="form-control sapcode" id="exampleSapCode"
-                                autocomplete="off" placeholder="Enter Sap Code">
+                               value="<%= exampleSapCode %>" autocomplete="off" placeholder="Enter Sap Code">
                         </div>
                         <div class="form-group">
                             <label for="exampleMaterialCode">Material Code</label>
@@ -128,18 +128,12 @@
                                 <option value="NO">NO</option>
                             </select>
                         </div>
-                        <button type="update" class="btn btn-success" id="update">Update</button>
+                        <button type="delete" formaction="/capax_del" class="btn btn-danger" id="delete">Delete</button>
+                        <button type="edit" formaction="/capax_edit" class="btn btn-primary" id="edit">Edit</button>
                 </form>
                 <br>
             </fieldset>
-            <button type="prev" style="visibility: hidden" id="btn_prev" class="btn btn-link">Prev</button>
-            <button type="next" style="visibility: hidden" id="btn_next" class="btn btn-link">Next</button>
-            <p id="show" style="visibility: hidden">Page:<span style="visibility: hidden" id="page"></span></p>
             <br>
-            <button type="export" class="btn btn-success" id="export">Export</button>
-            <button type="delete" style="visibility: hidden" class="btn btn-danger" id="delete">Delete</button>
-            <button type="edit" style="visibility: hidden" class="btn btn-primary" id="edit">Edit</button>
-            <button type="history" style="visibility: hidden" class="btn btn-primary" id="history">History</button>
 
         </div>
     </div>

@@ -83,7 +83,7 @@ app.post('/capax_save', function (req, res) {
   });
 })
 var datas = [];
-app.post('/capax_search', function (req, res){
+app.post('/capax_search', function (req , res){
   var serialnum = req.body.exampleserailNumber_c
   console.log(serialnum);
   db.collection('Capax').findOne({"serialNumber":serialnum})
@@ -94,13 +94,23 @@ app.post('/capax_search', function (req, res){
 })
 })
 
-/*Please Check this one too*/ 
+app.post('/capax_del', function (req, res){
+  db.collection('Capax').deleteOne({"serialNumber":serialnum})
+  .then(function (result){
+    console.log("Deleted");
+    res.redirect('/search_c');
+  })
+})
+
 app.get('/c', function (req, res){
-  console.log(datas.sapCode); //WOrking
-  var se = datas.serialNumber;
-  res.render('search_c',{exampleserailNumber  : se}); //Undefined 
+  
+  res.render('search_c',{exampleserailNumber  : datas.serialNumber,
+                         exampleSapCode : datas.sapCode}); 
 })
   
+app.post('/capax_edit', function (req, res){
+  res.redirect('/capax');
+})
 app.get('/', (req, res) => res.render('index'));
 app.get('/index', (req, res) => res.render('index'));
 app.get('/capax', (req, res) => res.render('capax'));
