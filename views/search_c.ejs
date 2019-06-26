@@ -55,6 +55,7 @@
                             id="exampleserailNumber_c" placeholder="Enter Serial Number" autocomplete="off" required>
                     </div>
                     <button type="submit" class="btn btn-primary" id="btn_cap">Retrive</button>
+                   
                     <br>
                     <br>
                 </form>
@@ -62,13 +63,14 @@
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
                         <input type="text" readonly="readonly" class="form-control snumber" name="exampleserailNumber"
-                            id="exampleserailNumber" value="<%= exampleserailNumber %>" placeholder="Enter Serial Number" autocomplete="off">
+                         value="<%= exampleserailNumber %>" id="exampleserailNumber" placeholder="Enter Serial Number" autocomplete="off">
                     </div>
+                    
                     <div class="form-group">
                         <div class="form-group">
                             <label for="exampleSapCode">Sap Code</label>
-                            <input type="text" readonly="readonly" class="form-control sapcode" id="exampleSapCode"
-                                autocomplete="off" placeholder="Enter Sap Code">
+                            <input type="text" readonly="readonly" class="form-control sapcode"  name="exampleSapCode" id="exampleSapCode"
+                            value="<%= exampleSapCode %>"  autocomplete="off" placeholder="Enter Sap Code">
                         </div>
                         <div class="form-group">
                             <label for="exampleMaterialCode">Material Code</label>
@@ -125,20 +127,11 @@
                                 <option value="NO">NO</option>
                             </select>
                         </div>
-                        <button type="update" class="btn btn-success" id="update">Update</button>
-                        <button type="delete" class="btn btn-danger" id="delete">Delete</button>
-                        <button type="edit"  class="btn btn-primary" id="edit">Edit</button>
+                        
+                        <button type="delete" class="btn btn-danger" formaction="/capax_del" id="delete">Delete</button>
+                        <button type="edit"  class="btn btn-primary" formaction="/capax_edit" id="edit">Edit</button>
                 </form>
-                <br>
-            <!-- <button type="prev" style="visibility: hidden" id="btn_prev" class="btn btn-link">Prev</button>
-            <button type="next" style="visibility: hidden" id="btn_next" class="btn btn-link">Next</button>
-            <p id="show" style="visibility: hidden">Page:<span style="visibility: hidden" id="page"></span></p> -->
             <br>
-          
-            <!-- <button type="export" class="btn btn-success" id="export">Export</button> -->
-           
-            <!-- 
-            <button type="history" style="visibility: hidden" class="btn btn-primary" id="history">History</button> -->
 
         </div>
     </div>

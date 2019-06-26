@@ -134,23 +134,31 @@ app.post('/capax_save', function (req, res) {
   });
 })
 var datas = [];
+var serialnum;
 app.post('/capax_search', function (req, res) {
-  var serialnum = req.body.exampleserailNumber_c
-  console.log(serialnum);
+  serialnum = req.body.exampleserailNumber_c
   db.collection('Capax').findOne({ "serialNumber": serialnum })
     .then(function (result) {
       console.log(result);
       datas = result;
+      
       res.redirect('/c');
     })
+
 })
 
 app.post('/capax_del', function (req, res) {
-  db.collection('Capax').deleteOne({ "serialNumber": serialnum })
+  db.collection('Capax').deleteOne({ "serialNumber": datas.serialNumber })
     .then(function (results) {
       console.log("Deleted Succesfully");
       res.redirect('/c');
     })
+})
+
+app.post('/capax_edit', function (req, res){
+  res.redirect('/capax');
+  console.log(datas.serialNumber);
+  // res.render('/capax', { exampleserailNumber: serialnum });
 })
 const collectionChunks = db.collection('uploads.chunks');
 
@@ -161,30 +169,31 @@ app.post('/retrive', function (req, res) {
       console.log(results);
       var text = results.toString('utf-8');//binaryto string
       console.log("START")
-      // try {
-      //   json = JSON.parse(text);
-      //   console.log("DONE")
-      //   db.collection('Capax').insertOne(json, function (err, collection) {
-      //     if (err) {
-      //       console.log("ERROR_SS")
-      //       console.log(err);
-      //     }
-      //     else {
-      //       console.log("Record inserted")
-      //       res.redirect('/');
-      //     }
-      //   })
-      // } catch (err) {
-      //   console.error(err)
-      // }
+      try {
+        json = JSON.parse(text);
+        console.log("DONE")
+        db.collection('Capax').insertOne(json, function (err, collection) {
+          if (err) {
+            console.log("ERROR_SS")
+            console.log(err);
+          }
+          else {
+            console.log("Record inserted")
+            res.redirect('/');
+          }
+        })
+      } catch (err) {
+        console.error(err)
+      }
     })
 
 });
-/*Please Check this one too*/
+
 app.get('/c', function (req, res) {
-  console.log(datas.sapCode); //WOrking
-  var se = datas.serialNumber;
-  res.render('search_c', { exampleserailNumber: se }); //Undefined 
+  // console.log(datas.sapCode); //WOrking
+  // var se = datas.serialNumber;
+  res.render('search_c', { exampleserailNumber: datas.serialNumber,
+    exampleSapCode : datas.sapCode });
 })
 
 app.get('/', (req, res) => res.render('index'));
