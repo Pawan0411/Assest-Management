@@ -50,7 +50,7 @@
 
             <fieldset>
                 <legend>Capax</legend>
-                
+
                 <form id="capaxdetails" action="/capax_search" method="POST">
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
@@ -58,6 +58,8 @@
                             id="exampleserailNumber_c" placeholder="Enter Serial Number" autocomplete="off" required>
                     </div>
                     <button type="submit" class="btn btn-primary" id="btn_cap">Retrive</button>
+                    <button type="delete" formaction="/capax_del" class="btn btn-danger" id="delete">Delete</button>
+                    <button type="edit" formaction="/capax_ed" class="btn btn-primary" id="edit">Edit</button>
                     <br>
                     <br>
                 </form>
@@ -65,33 +67,39 @@
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
                         <input type="text" readonly="readonly" class="form-control snumber" name="exampleserailNumber"
-                         value="<% exampleserailNumber %>"   id="exampleserailNumber" placeholder="Enter Serial Number" autocomplete="off">
+                            value="<%=exampleserailNumber %>" id="exampleserailNumber" placeholder="Enter Serial Number"
+                            autocomplete="off">
                     </div>
                     <div class="form-group">
                         <div class="form-group">
                             <label for="exampleSapCode">Sap Code</label>
                             <input type="text" readonly="readonly" class="form-control sapcode" id="exampleSapCode"
-                               value="<%= exampleSapCode %>" autocomplete="off" placeholder="Enter Sap Code">
+                                value="<%= exampleSapCode %>" autocomplete="off" placeholder="Enter Sap Code">
                         </div>
                         <div class="form-group">
                             <label for="exampleMaterialCode">Material Code</label>
                             <input type="text" readonly="readonly" class="form-control materialcode"
-                                id="exampleMaterialCode" placeholder="Enter Material Code" autocomplete="off">
+                                name="exampleMaterialCode" id="exampleMaterialCode" value="<%= exampleMaterialCode %>"
+                                placeholder="Enter Material Code" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="exampleMaterialQuantity">Material Quantity</label>
                             <input type="number" readonly="readonly" class="form-control materialquantity"
-                                id="exampleMaterialQuantity" placeholder="Enter Material Quantity" autocomplete="off">
+                                name="exampleMaterialQuantity" id="exampleMaterialQuantity"
+                                value="<%= exampleMaterialQuantity %>" placeholder="Enter Material Quantity"
+                                autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="examplepoNumber">PO Number</label>
                             <input type="text" readonly="readonly" class="form-control ponumber" id="examplepoNumber"
-                                placeholder="Enter PO Number" autocomplete="off">
+                                name="examplepoNumber" value="<%= examplepoNumber %>" placeholder="Enter PO Number"
+                                autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="examplepoDate">PO Date</label>
-                            <input type="date" readonly="readonly" class="form-control podate" id="examplepoDate"
-                                placeholder="Enter PO Date" autocomplete="off">
+                            <input type="date" readonly="readonly" class="form-control podate" name="examplepoDate"
+                                id="examplepoDate" value="<%= examplepoDate %>" placeholder="Enter PO Date"
+                                autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="exampleInvoiceDate">Invoice Date</label>
@@ -101,17 +109,20 @@
                         <div class="form-group">
                             <label for="exampleInvoiceNumber">Invoice Number</label>
                             <input type="text" readonly="readonly" class="form-control invoicenumber"
-                                id="exampleInvoiceNumber" autocomplete="off">
+                                name="exampleInvoiceNumber" id="exampleInvoiceNumber"
+                                value="<%= exampleInvoiceNumber %>" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="exampleRecieveDate">Receive Date</label>
                             <input type="date" readonly="readonly" class="form-control receivedate"
-                                id="exampleRecieveDate" autocomplete="off">
+                                name="exampleRecieveDate" id="exampleRecieveDate" value="<%= exampleRecieveDate %>"
+                                autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="exampleModel">Model</label>
-                            <input type="text" readonly="readonly" class="form-control model" id="exampleModel"
-                                autocomplete="off" placeholder="Enter Model">
+                            <input type="text" readonly="readonly" class="form-control model" name="exampleModel"
+                                id="exampleModel" autocomplete="off" value="<%= exampleModel %>"
+                                placeholder="Enter Model">
                         </div>
                         <div class="form-group">
                             <label for="exampleModelDescp">Model Description</label>
@@ -128,8 +139,7 @@
                                 <option value="NO">NO</option>
                             </select>
                         </div>
-                        <button type="delete" formaction="/capax_del" class="btn btn-danger" id="delete">Delete</button>
-                        <button type="edit" formaction="/capax_edit" class="btn btn-primary" id="edit">Edit</button>
+
                 </form>
                 <br>
             </fieldset>

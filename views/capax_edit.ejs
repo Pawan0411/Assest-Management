@@ -49,7 +49,7 @@
             <br>
             <fieldset>
                 <legend>Capax</legend>
-                <form id="capaxdetails" action="/capax_save" method="POST">
+                <form id="capaxdetails" action="/capax_edit" method="GET">
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
                         <input type="text" class="form-control snumber" name="exampleserailNumber" id="exampleserailNumber"
@@ -58,53 +58,54 @@
                     <div class="form-group">
                         <label for="exampleSapCode">Sap Code</label>
                         <input type="text" class="form-control sapcode" name="exampleSapCode" id="exampleSapCode" placeholder="Enter Sap Code"
-                            autocomplete="off">
+                          value="<%= exampleSapCode %>"  autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="exampleMaterialCode">Material Code</label>
                         <input type="text" class="form-control materialcode" name="exampleMaterialCode" id="exampleMaterialCode"
-                            placeholder="Enter Material Code" autocomplete="off">
+                           value="<%= exampleMaterialCode %>" placeholder="Enter Material Code" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="exampleMaterialQuantity">Material Quantity</label>
                         <input type="number" class="form-control materialquantity" name="exampleMaterialQuantity" id="exampleMaterialQuantity"
-                            placeholder="Enter Material Quantity" autocomplete="off">
+                           value="<%= exampleMaterialQuantity %>" placeholder="Enter Material Quantity" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="examplepoNumber">PO Number</label>
                         <input type="text" class="form-control ponumber" name="examplepoNumber" id="examplepoNumber"
-                            placeholder="Enter PO Number" autocomplete="off">
+                          value="<%= examplepoNumber %>"  placeholder="Enter PO Number" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="examplepoDate">PO Date</label>
                         <input type="date" class="form-control podate" name="examplepoDate" id="examplepoDate"
-                            placeholder="Enter PO Date" autocomplete="off">
+                           value="<%= examplepoDate %>" placeholder="Enter PO Date" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="exampleInvoiceDate">Invoice Date</label>
-                        <input type="date" class="form-control invoicedate" name="exampleInvoiceDate" id="exampleInvoiceDate" autocomplete="off"
+                        <input type="date" class="form-control invoicedate" name="exampleInvoiceDate"
+                        value="<%= exampleInvoiceDate %>" id="exampleInvoiceDate" autocomplete="off"
                             >
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInvoiceNumber">Invoice Number</label>
                         <input type="number" class="form-control invoicenumber" name="exampleInvoiceNumber" id="exampleInvoiceNumber"
-                            placeholder="Enter Invoice Number" autocomplete="off">
+                          value="<%= exampleInvoiceNumber %>"  placeholder="Enter Invoice Number" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="exampleRecieveDate">Receive Date</label>
-                        <input type="date" class="form-control receivedate" name="exampleRecieveDate" id="exampleRecieveDate" autocomplete="off"
+                        <input type="date" class="form-control receivedate" name="exampleRecieveDate" value="<%= exampleRecieveDate %>" id="exampleRecieveDate" autocomplete="off"
                             >
                     </div>
                     <div class="form-group">
                         <label for="exampleModel">Model</label>
-                        <input type="text" class="form-control model" name="exampleModel" id="exampleModel" autocomplete="off"
+                        <input type="text" class="form-control model" name="exampleModel" value="<%= exampleModel %>" id="exampleModel" autocomplete="off"
                             placeholder="Enter Model">
                     </div>
                     <div class="form-group">
                         <label for="exampleModelDescp">Model Description</label>
                         <textarea rows="6" cols="70" type="textarea" class="form-control modeldescp"
-                          name="exampleModelDescp"  id="exampleModelDescp" autocomplete="off" placeholder="Enter Model Description"> </textarea>
+                          name="exampleModelDescp"   id="exampleModelDescp" autocomplete="off" placeholder="Enter Model Description"> </textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleUpdateSummit">Updated In Summit</label>
@@ -115,8 +116,10 @@
                             <option value="NO">NO</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+                <form action="/capax_editsave" method="POST">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
             </fieldset>
         </div>
     </div>

@@ -4,32 +4,6 @@ var bodyParser = require('body-parser');
 const port = 3000;
 var json = require('./assets/example_1.json');
 
-
-// var fs = require('fs');
-// var firebase = require('firebase');
-// var firebaseConfig = {
-//     apiKey: "AIzaSyAX6nl15R1Vm5ofZi5j3b8_aqdECFKTKi8",
-//     authDomain: "assets-management-f7361.firebaseapp.com",
-//     databaseURL: "https://assets-management-f7361.firebaseio.com",
-//     projectId: "assets-management-f7361",
-//     storageBucket: "",
-//     messagingSenderId: "662080556439",
-//     appId: "1:662080556439:web:8f6c873bee5384e1"
-//   };
-//   // Initialize Firebase
-//   firebase.initializeApp(firebaseConfig);
-
-// var messagesRef = firebase.database().ref('Revenue Details');
-// messagesRef.on("value", function (data) {
-//     dat_r = JSON.stringify(data);
-//     console.log(dat_r);
-// });
-// var messagesRef = firebase.database().ref('Capax Details');
-// messagesRef.on("value", function (data) {
-//     dat_c = JSON.stringify(data);
-//     console.log(dat_c);
-// });
-
 //mongoose Setup
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -46,7 +20,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/js"));
 app.use(express.static(__dirname + "/css"));
 app.set('view engine', 'ejs');
-
 
 app.post('/capax_save', function (req, res) {
   var serialNumber = req.body.exampleserailNumber;
@@ -83,33 +56,79 @@ app.post('/capax_save', function (req, res) {
   });
 })
 var datas = [];
-app.post('/capax_search', function (req , res){
+app.post('/capax_search', function (req, res) {
   var serialnum = req.body.exampleserailNumber_c
   console.log(serialnum);
-  db.collection('Capax').findOne({"serialNumber":serialnum})
-  .then(function (result){
+  db.collection('Capax').findOne({ "serialNumber": serialnum })
+    .then(function (result) {
       console.log(result);
       datas = result;
       res.redirect('/c');
-})
-})
-
-app.post('/capax_del', function (req, res){
-  db.collection('Capax').deleteOne({"serialNumber":serialnum})
-  .then(function (result){
-    console.log("Deleted");
-    res.redirect('/search_c');
-  })
+    })
 })
 
-app.get('/c', function (req, res){
-  
-  res.render('search_c',{exampleserailNumber  : datas.serialNumber,
-                         exampleSapCode : datas.sapCode}); 
+const collectionchunks = db.collection('uploads.chunks')
+
+app.post('/retrive', function (req, res) {
+  var json;
+  collectionchunks.distinct('data')
+    .then(function (results) {
+      var text = results.toString('utf-8');
+      json = JSON.parse(text);
+      db.collection('Capax').insertOne(json, function (err, collection) {
+        if (err) throw err
+        console.log('Record insterted');
+        res.redirect('/');
+      })
+    })
 })
-  
-app.post('/capax_edit', function (req, res){
-  res.redirect('/capax');
+app.post('/capax_del', function (req, res) {
+  db.collection('Capax').deleteOne({ "serialNumber": serialnum })
+    .then(function (result) {
+      console.log("Deleted");
+      res.redirect('/search_c');
+    })
+})
+
+app.get('/c', function (req, res) {
+  res.render('search_c', {
+    exampleserailNumber: datas.serialNumber,
+    exampleSapCode: datas.sapCode,
+    exampleMaterialCode: datas.materialCode,
+    exampleMaterialQuantity: datas.materialQuantity,
+    examplepoNumber: datas.poNum,
+    examplepoDate: datas.poDate,
+    exampleInvoiceDate: datas.invoiceDate,
+    exampleInvoiceNumber: datas.invoiceNumber,
+    exampleRecieveDate: datas.receiveDate,
+    exampleModel: datas.model,
+    exampleModelDescp: datas.modelDesp,
+    exampleUpdateSummit: datas.summit
+  });
+})
+
+app.post('/capax_ed', function (req, res) {
+  res.redirect('/capax_edit');
+})
+app.get('/capax_edit', function (req, res){
+  res.render('capax_edit', {
+    exampleserailNumber: datas.serialNumber,
+    exampleSapCode: datas.sapCode,
+    exampleMaterialCode: datas.materialCode,
+    exampleMaterialQuantity: datas.materialQuantity,
+    examplepoNumber: datas.poNum,
+    examplepoDate: datas.poDate,
+    exampleInvoiceDate: datas.invoiceDate,
+    exampleInvoiceNumber: datas.invoiceNumber,
+    exampleRecieveDate: datas.receiveDate,
+    exampleModel: datas.model,
+    exampleModelDescp: datas.modelDesp,
+    exampleUpdateSummit: datas.summit
+  });
+})
+
+app.post('/capax_editsave', function (req, res){
+  //Wil save the edited data here, I will continue here
 })
 app.get('/', (req, res) => res.render('index'));
 app.get('/index', (req, res) => res.render('index'));
@@ -117,6 +136,7 @@ app.get('/capax', (req, res) => res.render('capax'));
 app.get('/revenue', (req, res) => res.render('revenue'));
 app.get('/search_c', (req, res) => res.render('search_c'));
 app.get('/search_r', (req, res) => res.render('search_r'));
+app.get('/r'), (req, res) => res.render('r');
 
 // app.get("/check/:id", (req, res) => {
 //     fs.writeFile("file.txt", (req.params.id), function (err) {
