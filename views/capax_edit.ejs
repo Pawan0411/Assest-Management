@@ -49,7 +49,7 @@
             <br>
             <fieldset>
                 <legend>Capax</legend>
-                <form id="capaxdetails" action="/capax_edit" method="GET">
+                <form id="capaxdetails" action="/capax_edit" method="POST">
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
                         <input type="text" class="form-control snumber" name="exampleserailNumber" id="exampleserailNumber"
@@ -116,10 +116,11 @@
                             <option value="NO">NO</option>
                         </select>
                     </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
-                <form action="/capax_editsave" method="POST">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+             
+              
+           
             </fieldset>
         </div>
     </div>
