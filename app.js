@@ -2,44 +2,15 @@ const express = require('express');
 const app = express();
 var bodyParser = require('body-parser');
 const port = 3000;
-var json = require('./assets/example_1.json');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const crypto = require('crypto');
 const methodOverride = require('method-override');
 const path = require('path');
+var atob = require('atob');
 
-
-
-// var fs = require('fs');
-// var firebase = require('firebase');
-// var firebaseConfig = {
-//     apiKey: "AIzaSyAX6nl15R1Vm5ofZi5j3b8_aqdECFKTKi8",
-//     authDomain: "assets-management-f7361.firebaseapp.com",
-//     databaseURL: "https://assets-management-f7361.firebaseio.com",
-//     projectId: "assets-management-f7361",
-//     storageBucket: "",
-//     messagingSenderId: "662080556439",
-//     appId: "1:662080556439:web:8f6c873bee5384e1"
-//   };
-//   // Initialize Firebase
-//   firebase.initializeApp(firebaseConfig);
-
-// var messagesRef = firebase.database().ref('Revenue Details');
-// messagesRef.on("value", function (data) {
-//     dat_r = JSON.stringify(data);
-//     console.log(dat_r);
-// });
-// var messagesRef = firebase.database().ref('Capax Details');
-// messagesRef.on("value", function (data) {
-//     dat_c = JSON.stringify(data);
-//     console.log(dat_c);
-// });
-
-//mongoose Setup
 const mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 const mongoURI = 'mongodb://localhost:27017/assets';
 mongoose.connect(mongoURI);
 
@@ -156,7 +127,7 @@ app.post('/capax_save', function (req, res) {
     "modelDesp": modelDesp,
     "summit": summit
   }
-  db.collection('Capax').insertOne(json, function (err, collection) {
+  db.collection('Capax').insertOne(data, function (err, collection) {
     if (err) throw err;
     console.log("Record inserted Successfully");
     res.redirect("/capax");
@@ -173,29 +144,42 @@ app.post('/capax_search', function (req, res) {
       res.redirect('/c');
     })
 })
-const collection = db.collection('uploads.files');    
+
+app.post('/capax_del', function (req, res) {
+  db.collection('Capax').deleteOne({ "serialNumber": serialnum })
+    .then(function (results) {
+      console.log("Deleted Succesfully");
+      res.redirect('/c');
+    })
+})
 const collectionChunks = db.collection('uploads.chunks');
 
-app.post('/retrive', function (req, res){
-
-  /*Getting all the data here */
-    collectionChunks.findOne({"n":0})
-    .then(function (results){
+app.post('/retrive', function (req, res) {
+  var json;
+  collectionChunks.distinct("data")
+    .then(function (results) {
       console.log(results);
-      res.redirect('/');
-    }) 
- 
-    /*trying to get the specifc data => null */
-      collectionChunks.findOne({"data.invoiceDate":"2019-06-03"})
-        .then(function (results){
-          console.log(results);
-          res.redirect('/');
-        })   
+      var text = results.toString('utf-8');//binaryto string
+      console.log("START")
+      // try {
+      //   json = JSON.parse(text);
+      //   console.log("DONE")
+      //   db.collection('Capax').insertOne(json, function (err, collection) {
+      //     if (err) {
+      //       console.log("ERROR_SS")
+      //       console.log(err);
+      //     }
+      //     else {
+      //       console.log("Record inserted")
+      //       res.redirect('/');
+      //     }
+      //   })
+      // } catch (err) {
+      //   console.error(err)
+      // }
+    })
 
-        /*If I need to convert the data to base64 Jus ping me don't do it,
-         I want to complete the export data part myself */
-    
-  });
+});
 /*Please Check this one too*/
 app.get('/c', function (req, res) {
   console.log(datas.sapCode); //WOrking
@@ -210,6 +194,37 @@ app.get('/revenue', (req, res) => res.render('revenue'));
 app.get('/search_c', (req, res) => res.render('search_c'));
 app.get('/search_r', (req, res) => res.render('search_r'));
 
+// HEROKU
+// app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
+
+// LOCAL
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+// var fs = require('fs');
+// var firebase = require('firebase');
+// var firebaseConfig = {
+//     apiKey: "AIzaSyAX6nl15R1Vm5ofZi5j3b8_aqdECFKTKi8",
+//     authDomain: "assets-management-f7361.firebaseapp.com",
+//     databaseURL: "https://assets-management-f7361.firebaseio.com",
+//     projectId: "assets-management-f7361",
+//     storageBucket: "",
+//     messagingSenderId: "662080556439",
+//     appId: "1:662080556439:web:8f6c873bee5384e1"
+//   };
+//   // Initialize Firebase
+//   firebase.initializeApp(firebaseConfig);
+
+// var messagesRef = firebase.database().ref('Revenue Details');
+// messagesRef.on("value", function (data) {
+//     dat_r = JSON.stringify(data);
+//     console.log(dat_r);
+// });
+// var messagesRef = firebase.database().ref('Capax Details');
+// messagesRef.on("value", function (data) {
+//     dat_c = JSON.stringify(data);
+//     console.log(dat_c);
+// });
+
+
 // app.get("/check/:id", (req, res) => {
 //     fs.writeFile("file.txt", (req.params.id), function (err) {
 //         if (err) {
@@ -221,10 +236,3 @@ app.get('/search_r', (req, res) => res.render('search_r'));
 //     res.send(req.params.id);
 // })
 
-
-
-// HEROKU
-// app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
-
-// LOCAL
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
