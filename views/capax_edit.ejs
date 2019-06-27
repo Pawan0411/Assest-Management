@@ -47,81 +47,84 @@
             <br>
             <h2>Assets Management</h2>
             <br>
-            <fieldset>
                 <legend>Capax</legend>
-                <form id="capaxdetails" action="/capax_edit" method="POST">
-                    <div class="form-group">
-                        <label for="exampleserailNumber">Serial Number</label>
-                        <input type="text" class="form-control snumber" name="exampleserailNumber" id="exampleserailNumber"
-                           value="<%=exampleserailNumber %>" placeholder="Enter Serial Number" autocomplete="off" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleSapCode">Sap Code</label>
-                        <input type="text" class="form-control sapcode" name="exampleSapCode" id="exampleSapCode" placeholder="Enter Sap Code"
-                          value="<%= exampleSapCode %>"  autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleMaterialCode">Material Code</label>
-                        <input type="text" class="form-control materialcode" name="exampleMaterialCode" id="exampleMaterialCode"
-                           value="<%= exampleMaterialCode %>" placeholder="Enter Material Code" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleMaterialQuantity">Material Quantity</label>
-                        <input type="number" class="form-control materialquantity" name="exampleMaterialQuantity" id="exampleMaterialQuantity"
-                           value="<%= exampleMaterialQuantity %>" placeholder="Enter Material Quantity" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="examplepoNumber">PO Number</label>
-                        <input type="text" class="form-control ponumber" name="examplepoNumber" id="examplepoNumber"
-                          value="<%= examplepoNumber %>"  placeholder="Enter PO Number" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="examplepoDate">PO Date</label>
-                        <input type="date" class="form-control podate" name="examplepoDate" id="examplepoDate"
-                           value="<%= examplepoDate %>" placeholder="Enter PO Date" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInvoiceDate">Invoice Date</label>
-                        <input type="date" class="form-control invoicedate" name="exampleInvoiceDate"
-                        value="<%= exampleInvoiceDate %>" id="exampleInvoiceDate" autocomplete="off"
-                            >
-                    </div>
+                <form action="/edit_save" method="POST">
+                    <form id="capaxdetails" action="/capax_edit" method="GET">
+                        <div class="form-group">
+                            <label for="exampleserailNumber">Serial Number</label>
+                            <input type="text" class="form-control snumber" name="exampleserailNumber"
+                                id="exampleserailNumber" value="<%=exampleserailNumber %>"
+                                placeholder="Enter Serial Number" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleSapCode">Sap Code</label>
+                            <input type="text" class="form-control sapcode" name="exampleSapCode" id="exampleSapCode"
+                                placeholder="Enter Sap Code" value="<%= exampleSapCode %>" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleMaterialCode">Material Code</label>
+                            <input type="text" class="form-control materialcode" name="exampleMaterialCode"
+                                id="exampleMaterialCode" value="<%= exampleMaterialCode %>"
+                                placeholder="Enter Material Code" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleMaterialQuantity">Material Quantity</label>
+                            <input type="number" class="form-control materialquantity" name="exampleMaterialQuantity"
+                                id="exampleMaterialQuantity" value="<%= exampleMaterialQuantity %>"
+                                placeholder="Enter Material Quantity" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="examplepoNumber">PO Number</label>
+                            <input type="text" class="form-control ponumber" name="examplepoNumber" id="examplepoNumber"
+                                value="<%= examplepoNumber %>" placeholder="Enter PO Number" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="examplepoDate">PO Date</label>
+                            <input type="date" class="form-control podate" name="examplepoDate" id="examplepoDate"
+                                value="<%= examplepoDate %>" placeholder="Enter PO Date" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInvoiceDate">Invoice Date</label>
+                            <input type="date" class="form-control invoicedate" name="exampleInvoiceDate"
+                                value="<%= exampleInvoiceDate %>" id="exampleInvoiceDate" autocomplete="off">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="exampleInvoiceNumber">Invoice Number</label>
-                        <input type="number" class="form-control invoicenumber" name="exampleInvoiceNumber" id="exampleInvoiceNumber"
-                          value="<%= exampleInvoiceNumber %>"  placeholder="Enter Invoice Number" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleRecieveDate">Receive Date</label>
-                        <input type="date" class="form-control receivedate" name="exampleRecieveDate" value="<%= exampleRecieveDate %>" id="exampleRecieveDate" autocomplete="off"
-                            >
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleModel">Model</label>
-                        <input type="text" class="form-control model" name="exampleModel" value="<%= exampleModel %>" id="exampleModel" autocomplete="off"
-                            placeholder="Enter Model">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleModelDescp">Model Description</label>
-                        <textarea rows="6" cols="70" type="textarea" class="form-control modeldescp"
-                          name="exampleModelDescp"   id="exampleModelDescp" autocomplete="off" placeholder="Enter Model Description"> </textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleUpdateSummit">Updated In Summit</label>
-                        <select class="form-control summit" name="exampleUpdateSummit" id="exampleUpdateSummit" autocomplete="off"
-                            placeholder="Enter Sap Code">
-                            <option value="" disabled selected>Select</option>
-                            <option value="YES">YES</option>
-                            <option value="NO">NO</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-             
-              
-           
-            </fieldset>
+                        <div class="form-group">
+                            <label for="exampleInvoiceNumber">Invoice Number</label>
+                            <input type="number" class="form-control invoicenumber" name="exampleInvoiceNumber"
+                                id="exampleInvoiceNumber" value="<%= exampleInvoiceNumber %>"
+                                placeholder="Enter Invoice Number" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleRecieveDate">Receive Date</label>
+                            <input type="date" class="form-control receivedate" name="exampleRecieveDate"
+                                value="<%= exampleRecieveDate %>" id="exampleRecieveDate" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleModel">Model</label>
+                            <input type="text" class="form-control model" name="exampleModel"
+                                value="<%= exampleModel %>" id="exampleModel" autocomplete="off"
+                                placeholder="Enter Model">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleModelDescp">Model Description</label>
+                            <textarea rows="6" cols="70" type="textarea" class="form-control modeldescp"
+                                name="exampleModelDescp" id="exampleModelDescp" autocomplete="off"
+                                placeholder="Enter Model Description"> </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleUpdateSummit">Updated In Summit</label>
+                            <select class="form-control summit" name="exampleUpdateSummit" id="exampleUpdateSummit"
+                                autocomplete="off" placeholder="Enter Sap Code">
+                                <option value="" disabled selected>Select</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+            
+            </form>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -130,8 +133,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-        <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
 
-        <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
-    <script src="app_c.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+    <!-- <script src="app_c.js"></script> -->
 </body>

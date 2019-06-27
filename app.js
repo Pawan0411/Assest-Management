@@ -58,22 +58,43 @@ app.post('/capax_save', function (req, res) {
   });
 })
 var datas = [];
+var length;
 app.post('/capax_search', function (req, res) {
   var serialnum = req.body.exampleserailNumber_c
-  console.log(serialnum);
-  db.collection('Capax').findOne({ "serialNumber": serialnum })
-    .then(function (result) {
-      if (result == null){
-        console.log('No Data found');
-     
-      }else{
-      console.log(result);
-      datas = result;
+  db.collection('Capax').find({ 'serialNumber': serialnum }).toArray(function (err, docs) {
+    if (err) throw err
+    if (docs == null) {
+      console.log("No Data Found");
+    } else {
+      length = docs.length;
+      console.log(length);
+      var i;
+      for (i = 0; i < length; i++) {
+        datas.push({
+          serialNumber: docs[i].serialNumber,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          invoiceNumber: docs[i].invoiceNumber,
+          receiveDate: docs[i].receiveDate,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          summit: docs[i].summit,
+          del_id : docs[i]._id
+        });
       }
-      res.redirect('/c');
-    })
+    }
+    res.redirect('/c');
+  });
+
 })
 
+app.post('/capax_his', function (req, res) {
+ 
+})
 const collectionchunks = db.collection('uploads.chunks')
 
 app.post('/retrive', function (req, res) {
@@ -89,49 +110,71 @@ app.post('/retrive', function (req, res) {
       })
     })
 })
+
+app.get('/c', function (req, res) {
+  var i;
+  var rec = [];
+  for (i = (length - 1); i < length; i++) {
+    rec = datas[i];
+  }
+ 
+  res.render('search_c', {
+    exampleserailNumber: rec.serialNumber,
+    exampleSapCode: rec.sapCode,
+    exampleMaterialCode: rec.materialCode,
+    exampleMaterialQuantity: rec.materialQuantity,
+    examplepoNumber: rec.poNum,
+    examplepoDate: rec.poDate,
+    exampleInvoiceDate: rec.invoiceDate,
+    exampleInvoiceNumber: rec.invoiceNumber,
+    exampleRecieveDate: rec.receiveDate,
+    exampleModel: rec.model,
+    exampleModelDescp: rec.modelDesp,
+    exampleUpdateSummit: rec.summit
+  });
+})
+
 app.post('/capax_del', function (req, res) {
-  db.collection('Capax').deleteOne({ "serialNumber": serialnum })
-    .then(function (result) {
-      console.log("Deleted");
-      res.redirect('/search_c');
+  var i;
+  var rec = [];
+  for (i = (length - 1); i < length; i++) {
+    rec = datas[i];
+  }
+  console.log(rec.del_id)
+    db.collection('Capax').deleteOne({'_id': rec.del_id})
+    .then(function (results){
+      console.log('Deleted SuccessFully');
+      res.redirect('/c');
     })
 })
 
-app.get('/c', function (req, res) {
-  console.log(datas.summit)
-  console.log(datas.modelDesp);
-  res.render('search_c', {
-    exampleserailNumber: datas.serialNumber,
-    exampleSapCode: datas.sapCode,
-    exampleMaterialCode: datas.materialCode,
-    exampleMaterialQuantity: datas.materialQuantity,
-    examplepoNumber: datas.poNum,
-    examplepoDate: datas.poDate,
-    exampleInvoiceDate: datas.invoiceDate,
-    exampleInvoiceNumber: datas.invoiceNumber,
-    exampleRecieveDate: datas.receiveDate,
-    exampleModel: datas.model,
-    exampleModelDescp: datas.modelDesp,
-    exampleUpdateSummit: datas.summit
+
+var data_ed;
+app.post('/capax_edit', function (req, res) {
+  console.log(req.body)
+  var i;
+  var rec = [];
+  for (i = (length - 1); i < length; i++) {
+    rec = datas[i];
+  }
+  res.render('capax_edit', {
+    exampleserailNumber: rec.serialNumber,
+    exampleSapCode: rec.sapCode,
+    exampleMaterialCode: rec.materialCode,
+    exampleMaterialQuantity: rec.materialQuantity,
+    examplepoNumber: rec.poNum,
+    examplepoDate: rec.poDate,
+    exampleInvoiceDate: rec.invoiceDate,
+    exampleInvoiceNumber: rec.invoiceNumber,
+    exampleRecieveDate: rec.receiveDate,
+    exampleModel: rec.model,
+    exampleModelDescp: rec.modelDesp,
+    exampleUpdateSummit: rec.summit
   });
 })
 
-app.post('/capax_edit', function (req, res){
-  console.log(req.body) 
-  res.render('capax_edit', {
-    exampleserailNumber: datas.serialNumber,
-    exampleSapCode: datas.sapCode,
-    exampleMaterialCode: datas.materialCode,
-    exampleMaterialQuantity: datas.materialQuantity,
-    examplepoNumber: datas.poNum,
-    examplepoDate: datas.poDate,
-    exampleInvoiceDate: datas.invoiceDate,
-    exampleInvoiceNumber: datas.invoiceNumber,
-    exampleRecieveDate: datas.receiveDate,
-    exampleModel: datas.model,
-    exampleModelDescp: datas.modelDesp,
-    exampleUpdateSummit: datas.summit
-  });
+app.post('/edit_save', function (req, res) {
+  console.log(req.body)
   var serialNumber = req.body.exampleserailNumber;
   var sapCode = req.body.exampleSapCode;
   var materialCode = req.body.exampleMaterialCode;
@@ -144,9 +187,9 @@ app.post('/capax_edit', function (req, res){
   var model = req.body.exampleModel;
   var modelDesp = req.body.exampleModelDescp;
   var summit = req.body.exampleUpdateSummit;
-  console.log(summit);
 
-  var data = {
+
+  data_ed = {
     "serialNumber": serialNumber,
     "sapCode": sapCode,
     "materialCode": materialCode,
@@ -160,13 +203,12 @@ app.post('/capax_edit', function (req, res){
     "modelDesp": modelDesp,
     "summit": summit
   }
-  db.collection('Capax').insertOne(data, function (err, collection) {
-    if (err) throw err;
-    console.log("Record inserted Successfully");
-    res.redirect("/capax");
-  });
+  db.collection('Capax').insertOne(data_ed, function (err, collection) {
+    if (err) throw err
+    console.log('Record Inserted');
+    res.redirect('/c');
+  })
 })
-
 app.get('/', (req, res) => res.render('index'));
 app.get('/index', (req, res) => res.render('index'));
 app.get('/capax', (req, res) => res.render('capax'));
