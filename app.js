@@ -3,8 +3,17 @@ const app = express();
 var bodyParser = require('body-parser');
 const port = 3000;
 
-var json = require('./assets/example_1.json');
+var flash = require('connect-flash');
+var session = require('express-session')
+var cookieparser = require('cookie-parser')
 
+app.use(cookieparser('secret123'));
+app.use(session({
+  secret : "secret123",
+  saveUninitialized : true,
+  resave: true
+}));
+app.use(flash());
 //mongoose Setup
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -61,16 +70,17 @@ var datas = [];
 var length;
 app.post('/capax_search', function (req, res) {
   var serialnum = req.body.exampleserailNumber_c
+  req.flash("data_err", "No data found");
+  req.flash("succes_err","Some error ocuured");
   db.collection('Capax').find({ 'serialNumber': serialnum }).toArray(function (err, docs) {
     if (err) throw err
-    if (docs == null) {
-      console.log("No Data Found");
-    } else {
+   
       length = docs.length;
       console.log(length);
       var i;
       for (i = 0; i < length; i++) {
         datas.push({
+          c_serialnum: serialnum,
           serialNumber: docs[i].serialNumber,
           sapCode: docs[i].sapCode,
           materialCode: docs[i].materialCode,
@@ -86,7 +96,7 @@ app.post('/capax_search', function (req, res) {
           del_id : docs[i]._id
         });
       }
-    }
+    
     res.redirect('/c');
   });
 
@@ -117,8 +127,15 @@ app.get('/c', function (req, res) {
   for (i = (length - 1); i < length; i++) {
     rec = datas[i];
   }
- 
-  res.render('search_c', {
+  if (rec == null) {
+    console.log('No data Found');
+    res.send(req.flash('data_err'));
+    
+  }
+   else {
+
+  res.render('capax_se', {
+    exampleserailNumber_c : rec.c_serialnum,
     exampleserailNumber: rec.serialNumber,
     exampleSapCode: rec.sapCode,
     exampleMaterialCode: rec.materialCode,
@@ -131,9 +148,10 @@ app.get('/c', function (req, res) {
     exampleModel: rec.model,
     exampleModelDescp: rec.modelDesp,
     exampleUpdateSummit: rec.summit
-  });
-})
-
+  
+});
+   }
+  })
 app.post('/capax_del', function (req, res) {
   var i;
   var rec = [];
@@ -157,6 +175,7 @@ app.post('/capax_edit', function (req, res) {
   for (i = (length - 1); i < length; i++) {
     rec = datas[i];
   }
+  
   res.render('capax_edit', {
     exampleserailNumber: rec.serialNumber,
     exampleSapCode: rec.sapCode,
@@ -171,6 +190,7 @@ app.post('/capax_edit', function (req, res) {
     exampleModelDescp: rec.modelDesp,
     exampleUpdateSummit: rec.summit
   });
+
 })
 
 app.post('/edit_save', function (req, res) {
