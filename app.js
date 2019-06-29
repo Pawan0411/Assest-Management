@@ -248,7 +248,7 @@ app.post('/retrive', function (req, res) {
 })
 
 app.post('/export', function (req, res) {
-  db.collection('Capax').find({}).toArray(function (err, docs) {
+  db.collection('Capax').find().toArray(function (err, docs) {
     if (err) throw err
     console.log(docs);
     fs.writeFile('Output.json', JSON.stringify(docs), function (err) {
@@ -909,4 +909,7 @@ app.get('/import_cap', (req, res) => res.render('import_cap'))
 
 
 // LOCAL
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+// app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+// HEROKU
+app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
