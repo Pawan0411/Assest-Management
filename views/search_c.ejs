@@ -32,46 +32,42 @@
         li a:hover {
             background-color: #ffffff;
         }
+        .sub-entry {
+            width: 50%;
+            float: left;
+        }
     </style>
 </head>
 
 <body>
     <ul>
-        <li><a href="#">Import Data</a></li>
+        <li><a href="#">Import</a></li>
         <li><a href="./capax">Capax</a></li>
         <li><a href="./revenue">Revenue</a></li>
 
     </ul>
     <div class="row">
         <div class="container">
-            <br>
-            <h2>Assets Management</h2>
-            <br>
-
-            <fieldset>
-                <legend>Capax</legend>
+            <h3 >Assets Management</h3>
+            <legend>Capax</legend>
 
                 <form id="capaxdetails" action="/capax_search" method="POST">
+                  
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
                         <input type="text" class="form-control snumber" name="exampleserailNumber_c"
                             id="exampleserailNumber_c" placeholder="Enter Serial Number" autocomplete="off" required>
                     </div>
                     <button type="submit" class="btn btn-primary" id="btn_cap">Retrive</button>
-                    <button type="delete" formaction="/capax_del" class="btn btn-danger" id="delete">Delete</button>
-                    <button type="edit" formaction="/capax_edit" class="btn btn-primary" id="edit">Edit</button>
-                    <button type="history" formaction="/capax_his" class="btn btn-primary" id="history">History</button>
                     <br>
-                    <br>
-
                     <form id="capax" action="/c" method="GET">
+                        <div class="sub-entry col-sm-6  ">
                         <div class="form-group">
                             <label for="exampleserailNumber">Serial Number</label>
                             <input type="text" readonly="readonly" class="form-control snumber"
                                 name="exampleserailNumber" id="exampleserailNumber"
                                 placeholder="Enter Serial Number" autocomplete="off">
                         </div>
-                        <div class="form-group">
                             <div class="form-group">
                                 <label for="exampleSapCode">Sap Code</label>
                                 <input type="text" readonly="readonly" class="form-control sapcode" id="exampleSapCode" name="exampleSapCode"
@@ -109,6 +105,8 @@
                                     name="exampleInvoiceDate"  id="exampleInvoiceDate"
                                     autocomplete="off">
                             </div>
+                            </div>
+                            <div class="sub-entry col-sm-6">
                             <div class="form-group">
                                 <label for="exampleInvoiceNumber">Invoice Number</label>
                                 <input type="text" readonly="readonly" class="form-control invoicenumber"
@@ -130,7 +128,7 @@
                             <div class="form-group">
                                 <label for="exampleModelDescp">Model Description</label>
                                 <textarea readonly="readonly" rows="6" cols="70" type="textarea"
-                                    class="form-control modeldescp" id="exampleModelDescp" name="exampleModelDescp"
+                                   style="height:211px;"  class="form-control modeldescp" id="exampleModelDescp" name="exampleModelDescp"
                                     autocomplete="off"
                                     placeholder="Enter Model Description"> </textarea>
                             </div>
@@ -143,13 +141,9 @@
                                     <option value="NO">NO</option>
                                 </select>
                             </div>
-
-                    </form>
+                            </div>
+                        </form>
                 </form>
-                <br>
-            </fieldset>
-            <br>
-
         </div>
     </div>
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -160,5 +154,4 @@
     <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
-    <script src="search_c.js"></script>
 </body>

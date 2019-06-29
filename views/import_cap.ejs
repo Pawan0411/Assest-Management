@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Assets Management</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" id="cardetails">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+              <div class="custom-file mb-3">
+                <input type="file" name="file" id="file" class="custom-file-input">
+                <label for="file" class="custom-file-label">Choose File</label>
+              </div>
+              <input type="submit" value="Import" class="btn btn-primary">
+              <input type="submit" formaction="/retrive" value="Add to Database" class="btn btn-success">
+              <input type="submit" formaction="/export" value="Export" class="btn btn-primary">
+            </form>
+          </div>
+        </div>
+        <p><b>Note : </b>Please make sure to add import data to Database by clicking <b>Add to Database</b>.</p>
+      </div>
+    </div>
+  </div>
+
+
+</body>

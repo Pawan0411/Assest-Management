@@ -49,9 +49,9 @@
     <div class="row">
         <div class="container">
             <h3 class="col-sm-6">Assets Management</h3>
-            <legend class="col-sm-6">Capax</legend>
-            <form action="/editc_save" method="POST">
-                <form id="capaxdetails" action="/capax_edit" method="GET">
+            <legend class="col-sm-6">Revenue</legend>
+            <form action="/editr_save" method="POST">
+                <form id="revenuedetails" action="/revenue_edit" method="GET">
                     <div class="sub-entry col-sm-6">
                         <div class="form-group">
                             <label for="exampleserailNumber">Serial Number</label>
@@ -81,6 +81,8 @@
                             <input type="text" class="form-control ponumber" name="examplepoNumber" id="examplepoNumber"
                                 value="<%= examplepoNumber %>" placeholder="Enter PO Number" autocomplete="off">
                         </div>
+                    </div>
+                    <div class="sub-entry col-sm-6">
                         <div class="form-group">
                             <label for="examplepoDate">PO Date</label>
                             <input type="date" class="form-control podate" name="examplepoDate" id="examplepoDate"
@@ -91,15 +93,7 @@
                             <input type="date" class="form-control invoicedate" name="exampleInvoiceDate"
                                 value="<%= exampleInvoiceDate %>" id="exampleInvoiceDate" autocomplete="off">
                         </div>
-                    </div>
-                    <div class="sub-entry col-sm-6">
-
-                        <div class="form-group">
-                            <label for="exampleInvoiceNumber">Invoice Number</label>
-                            <input type="number" class="form-control invoicenumber" name="exampleInvoiceNumber"
-                                id="exampleInvoiceNumber" value="<%= exampleInvoiceNumber %>"
-                                placeholder="Enter Invoice Number" autocomplete="off">
-                        </div>
+                        
                         <div class="form-group">
                             <label for="exampleRecieveDate">Receive Date</label>
                             <input type="date" class="form-control receivedate" name="exampleRecieveDate"
@@ -116,15 +110,6 @@
                             <textarea  rows="8" style="height:211px;" type="textarea" class="form-control modeldescp"
                                 name="exampleModelDescp" id="exampleModelDescp" autocomplete="off"
                                 placeholder="Enter Model Description"> </textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleUpdateSummit">Updated In Summit</label>
-                            <select class="form-control summit" name="exampleUpdateSummit" id="exampleUpdateSummit"
-                                autocomplete="off" placeholder="Enter Sap Code">
-                                <option value="" disabled selected>Select</option>
-                                <option value="YES">YES</option>
-                                <option value="NO">NO</option>
-                            </select>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>

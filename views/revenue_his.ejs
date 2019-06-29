@@ -43,14 +43,14 @@
 <body>
     <ul>
         <li><a href="#">Import Data</a></li>
-        <li><a href="./search_c">Search Data</a></li>
-        <li><a href="./revenue">Revenue</a></li>
+        <li><a href="./search_r">Search Data</a></li>
+        <li><a href="./capax">Capax</a></li>
 
     </ul>
     <div class="row">
         <div class="container">
             <h3 class="col-sm-6">Assets Management</h3>
-            <legend class="col-sm-6">Capax</legend>
+            <legend class="col-sm-6">Revenue</legend>
             <form action="/next" method="GET">
                 <div class="sub-entry col-sm-6">
                 <div class="form-group">
@@ -80,6 +80,8 @@
                     <input type="text" class="form-control ponumber" name="examplepoNumber" id="examplepoNumber"
                      readonly="readonly"   value="<%= examplepoNumber %>" placeholder="Enter PO Number" autocomplete="off">
                 </div>
+            </div>
+            <div class="sub-entry col-sm-6">
                 <div class="form-group">
                     <label for="examplepoDate">PO Date</label>
                     <input type="date" class="form-control podate" name="examplepoDate" id="examplepoDate"
@@ -89,14 +91,6 @@
                     <label for="exampleInvoiceDate">Invoice Date</label>
                     <input type="date" class="form-control invoicedate" name="exampleInvoiceDate"
                       readonly="readonly" value="<%= exampleInvoiceDate %>" id="exampleInvoiceDate" autocomplete="off">
-                </div>
-                </div>
-                <div class="sub-entry col-sm-6">
-                <div class="form-group">
-                    <label for="exampleInvoiceNumber">Invoice Number</label>
-                    <input type="number" class="form-control invoicenumber" name="exampleInvoiceNumber"
-                       readonly="readonly" id="exampleInvoiceNumber" value="<%= exampleInvoiceNumber %>" placeholder="Enter Invoice Number"
-                        autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="exampleRecieveDate">Receive Date</label>
@@ -113,15 +107,6 @@
                     <textarea rows="6" cols="70" type="textarea" class="form-control modeldescp"
                     style="height:211px;" disabled="disabled" name="exampleModelDescp" id="exampleModelDescp" autocomplete="off"
                         placeholder="Enter Model Description"> </textarea>
-                </div>
-                <div class="form-group">
-                    <label for="exampleUpdateSummit">Updated In Summit</label>
-                    <select class="form-control summit" name="exampleUpdateSummit" disabled="disabled" id="exampleUpdateSummit"
-                        autocomplete="off" placeholder="Enter Sap Code">
-                        <option value="" disabled selected>Select</option>
-                        <option value="YES">YES</option>
-                        <option value="NO">NO</option>
-                    </select>
                 </div>
             </div>
                 <button type="next" class="btn btn-success" id="next">Next</button>
