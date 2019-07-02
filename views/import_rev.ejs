@@ -56,20 +56,21 @@
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" id="cardetails">
                 <div class="card card-signin my-5">
                     <div class="card-body">
-                        <p><b>Note : </b>Please convert your excel file to JSON file</p>
+                        <!-- <p><b>Note : </b>Please convert your excel file to JSON file</p>
                         <form action="https://codebeautify.org/excel-to-json">
                             <input type="submit" value="Convert" class="btn btn-warning" />
-                        </form>
+                        </form> -->
                         <legend class="">Revenue</legend>
                         <form action="/upload_r" method="POST" enctype="multipart/form-data">
                             <div class="custom-file mb-3">
                                 <input type="file" name="file" id="file" class="custom-file-input">
-                                <label for="file" class="custom-file-label">Import JSON fileName</label>
+                                <label for="file" class="custom-file-label">Import excel file</label>
                             </div>
                             <input type="submit" value="Import" class="btn btn-primary">
-                            <input type="submit" disabled="disabled" formaction="/retrive_r" value="Add to Database"
-                                class="btn btn-success">
                             <input type="submit" formaction="/export_r" value="Export" class="btn btn-primary">
+                            <!-- <input type="submit" disabled="disabled" formaction="/retrive_r" value="Add to Database"
+                                class="btn btn-success"> -->
+                           
                         </form>
                     </div>
                 </div>

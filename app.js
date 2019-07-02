@@ -13,6 +13,10 @@ const flash = require('express-flash-notification');
 var session = require('express-session')
 var cookieparser = require('cookie-parser')
 const MongoClient = require('mongodb').MongoClient;
+var upload1 = require('express-fileupload');
+app.use(upload1());
+var temp = require('fs-temp');
+var xlsxtojson = require("xlsx-to-json");
 
 const flashNotificationOptions = {
   beforeSingleRender: function (item, callback) {
@@ -57,6 +61,18 @@ const flashNotificationOptions = {
         case 'Update':
           item.type = 'DataBase Updated';
           item.alertClass = 'alert-success';
+          break;
+        case 'Browse_err':
+          item.type = 'Please browse a file.';
+          item.alertClass = 'alert-danger';
+          break;
+        case 'Path_err':
+          item.type = 'Soory, path error';
+          item.alertClass = 'alert-danger';
+          break;
+        case  'Excel_err':
+          item.type = 'Please import excel file';
+          item.alertClass = 'alert-warning';
           break;
       }
     }
@@ -129,38 +145,137 @@ var capaxSchema = new Schema({ name: Object }, { strict: false });
 var Capax = mongoose.model('Capax', capaxSchema);
 
 var name;
-app.post('/upload', upload.single('file'), (req, res) => {
-  const chunks = [];
-  const readStream = gfs.createReadStream(req.file.id);
-  name = req.file.originalname;
-  readStream.on("data", function (chunk) {
-    chunks.push(chunk);
-  });
-  readStream.on("end", function () {
-    Buffer.concat(chunks)
-    let json = chunks.toString('utf-8')
-    var data = new Capax({ json });
-    data.save();
-    res.render('cap_imp', {file : name});
-  })
+// upload.single('file'),
+app.post('/upload', function (req, res) {
 
+  //Uploading Files directly to mongoose
+
+  // const chunks = [];
+  // const readStream = gfs.createReadStream(req.file.id);
+  // name = req.file.originalname;
+  // readStream.on("data", function (chunk) {
+  //   chunks.push(chunk);
+  // });
+  // readStream.on("end", function () {
+  //   Buffer.concat(chunks)
+  //   let json = chunks.toString('utf-8')
+  //   var data = new Capax({ json });
+  //   data.save();
+  //   res.render('cap_imp', {file : name});
+  // })
+
+  /**
+   * Uploading Excel files , convert => json => mongoose upload
+   */
+
+  if (!req.files) {
+    console.log('Please browse the file.')
+    req.flash('Browse_err', '', '/import_cap')
+  } else {
+    console.log(req.files);
+    file = req.files;
+    name = file.file.name;
+    console.log(name);
+    var data = new Buffer(file.file.data)
+    var path = temp.writeFileSync(data)
+    console.log(path);
+
+    fs.readFile(path, { encoding: 'utf-8' }, function (err, data) {
+      if (err) {
+        console.log(err);
+        req.flash('Path_err','', '/import_cap');
+      } else {
+        console.log(path);
+        xlsxtojson({
+          input: path,  // input xls 
+          output: "output.json", // output json 
+          lowerCaseHeaders: true
+        }, function (err, result) {
+          if (err) {
+            console.log(err);
+            console.log('Please upload xlsx files');
+            req.flash('Excel_err','',  '/import_cap');
+          } else {
+            console.log(result)
+            db.collection('Capax').insertMany(result, function (err, collection) {
+              if (err) {
+                console.log(err);
+                req.flash('Error-form', '', '/import_cap');
+              } else {
+                req.flash('Update', '', '/');
+                dat = [];
+              }
+            })
+          }
+        })
+       }
+     })
+  }
 });
 
 app.post('/upload_r', upload.single('file'), (req, res) => {
-  const chunks = [];
-  const readStream = gfs.createReadStream(req.file.id);
-  name = req.file.originalname;
-  readStream.on("data", function (chunk) {
-    chunks.push(chunk);
-  });
-  readStream.on("end", function () {
-    Buffer.concat(chunks)
-    let json = chunks.toString('utf-8')
-    var data = new Capax({ json });
-    data.save();
-    res.render('rev_imp', {file : name});
-  })
+  //Uploading Files directly to mongoose
 
+  // const chunks = [];
+  // const readStream = gfs.createReadStream(req.file.id);
+  // name = req.file.originalname;
+  // readStream.on("data", function (chunk) {
+  //   chunks.push(chunk);
+  // });
+  // readStream.on("end", function () {
+  //   Buffer.concat(chunks)
+  //   let json = chunks.toString('utf-8')
+  //   var data = new Capax({ json });
+  //   data.save();
+  //   res.render('cap_imp', {file : name});
+  // })
+
+  /**
+   * Uploading Excel files , convert => json => mongoose upload
+   */
+
+  if (!req.files) {
+    console.log('Please browse the file.')
+    req.flash('Browse_err', '', '/import_rev')
+  } else {
+    console.log(req.files);
+    file = req.files;
+    name = file.file.name;
+    console.log(name);
+    var data = new Buffer(file.file.data)
+    var path = temp.writeFileSync(data)
+    console.log(path);
+
+    fs.readFile(path, { encoding: 'utf-8' }, function (err, data) {
+      if (err) {
+        console.log(err);
+        req.flash('Path_err', '/import_rev');
+      } else {
+        xlsxtojson({
+          input: path,  // input xls 
+          output: "output.json", // output json 
+          lowerCaseHeaders: true
+        }, function (err, result) {
+          if (err) {
+            console.log(err);
+            console.log('Please upload xlsx files');
+            req.flash('Excel_err', '/import_rev');
+          } else {
+            console.log(result)
+            db.collection('Revenue').insertMany(result, function (err, collection) {
+              if (err) {
+                console.log(err);
+                req.flash('Error-form', '', '/import_rev');
+              } else {
+                req.flash('Update', '', '/');
+                dat = [];
+              }
+            })
+          }
+        })
+      }
+    })
+  }
 });
 
 
@@ -285,47 +400,47 @@ app.post('/capax_search', function (req, res) {
 /**
  * Add import data to mongoose database
  */
-const collectionchunks = db.collection('uploads.chunks')
-var dat = []
-app.post('/retrive', function (req, res) {
-  var json;
-  collectionchunks.find({}, { sort: { '_id': -1 } })
-    .toArray(function (err, docs) {
-      console.log(docs.length)
-      if (err) {
-        console.log(err);
-        req.flash('Import', '', '/import_cap');
-      } else {
-        dat.push({
-          id: docs[0]._id
-        });
-        console.log(dat[0].id);
-        var id = dat[0].id;
-        console.log(id);
-        collectionchunks.findOne({ '_id': id }, function (err, collection) {
-          if (err) {
-            console.log(err);
-            req.flash('Import', '', '/import_cap');
-          } else {
-            var text = collection.data.toString('utf-8');
-            console.log(text.replace(/\s/, ''));
-            var tex = text.replace(/\s/, '');
-            json = JSON.parse(tex);
-            db.collection('Capax').insertMany(json, function (err, collection) {
-              if (err) {
-                console.log(err);
-                req.flash('Error-form', '', '/import_cap');
-              } else {
-                req.flash('Update', '', '/');
-                dat = [];
-                console.log(id);
-              }
-            })
-        }
-        })
-      }
-    })
-})
+// const collectionchunks = db.collection('uploads.chunks')
+// var dat = []
+// app.post('/retrive', function (req, res) {
+//   var json;
+//   collectionchunks.find({}, { sort: { '_id': -1 } })
+//     .toArray(function (err, docs) {
+//       console.log(docs.length)
+//       if (err) {
+//         console.log(err);
+//         req.flash('Import', '', '/import_cap');
+//       } else {
+//         dat.push({
+//           id: docs[0]._id
+//         });
+//         console.log(dat[0].id);
+//         var id = dat[0].id;
+//         console.log(id);
+//         collectionchunks.findOne({ '_id': id }, function (err, collection) {
+//           if (err) {
+//             console.log(err);
+//             req.flash('Import', '', '/import_cap');
+//           } else {
+//             var text = collection.data.toString('utf-8');
+//             console.log(text.replace(/\s/, ''));
+//             var tex = text.replace(/\s/, '');
+//             json = JSON.parse(tex);
+//             db.collection('Capax').insertMany(json, function (err, collection) {
+//               if (err) {
+//                 console.log(err);
+//                 req.flash('Error-form', '', '/import_cap');
+//               } else {
+//                 req.flash('Update', '', '/');
+//                 dat = [];
+//                 console.log(id);
+//               }
+//             })
+//           }
+//         })
+//       }
+//     })
+// })
 
 app.post('/export', function (req, res) {
   db.collection('Capax').find().toArray(function (err, docs) {
@@ -971,45 +1086,45 @@ app.post('/editr_save', function (req, res) {
   })
 })
 
-app.post('/retrive_r', function (req, res) {
-  var json;
-  collectionchunks.find({}, { sort: { '_id': -1 } })
-    .toArray(function (err, docs) {
-      console.log(docs.length)
-      if (err) {
-        console.log(err);
-        req.flash('Import', '', '/import_rev');
-      } else {
-        dat.push({
-          id: docs[0]._id
-        });
-        console.log(dat[0].id);
-        var id = dat[0].id;
-        console.log(id);
-        collectionchunks.findOne({ '_id': id }, function (err, collection) {
-          if (err) {
-            console.log(err);
-            req.flash('Import', '', '/import_rev');
-          } else {
-            var text = collection.data.toString('utf-8');
-            console.log(text.replace(/\s/, ''));
-            var tex = text.replace(/\s/, '');
-            json = JSON.parse(tex);
-            db.collection('Revenue').insertMany(json, function (err, collection) {
-              if (err) {
-                console.log(err);
-                req.flash('Error-form', '', '/import_rev');
-              } else {
-                req.flash('Update', '', '/');
-                dat = [];
-                console.log(id);
-              }
-            })
-        }
-        })
-      }
-    })
-})
+// app.post('/retrive_r', function (req, res) {
+//   var json;
+//   collectionchunks.find({}, { sort: { '_id': -1 } })
+//     .toArray(function (err, docs) {
+//       console.log(docs.length)
+//       if (err) {
+//         console.log(err);
+//         req.flash('Import', '', '/import_rev');
+//       } else {
+//         dat.push({
+//           id: docs[0]._id
+//         });
+//         console.log(dat[0].id);
+//         var id = dat[0].id;
+//         console.log(id);
+//         collectionchunks.findOne({ '_id': id }, function (err, collection) {
+//           if (err) {
+//             console.log(err);
+//             req.flash('Import', '', '/import_rev');
+//           } else {
+//             var text = collection.data.toString('utf-8');
+//             console.log(text.replace(/\s/, ''));
+//             var tex = text.replace(/\s/, '');
+//             json = JSON.parse(tex);
+//             db.collection('Revenue').insertMany(json, function (err, collection) {
+//               if (err) {
+//                 console.log(err);
+//                 req.flash('Error-form', '', '/import_rev');
+//               } else {
+//                 req.flash('Update', '', '/');
+//                 dat = [];
+//                 console.log(id);
+//               }
+//             })
+//           }
+//         })
+//       }
+//     })
+// })
 
 app.post('/export_r', function (req, res) {
   db.collection('Revenue').find().toArray(function (err, docs) {
