@@ -41,11 +41,12 @@
 
 <body>
     <ul>
-        <li><a href="#">Import Data</a></li>
-        <li><a href="./search_c">Search Data</a></li>
-        <li><a href="./revenue">Revenue</a></li>
+        <li><a href="./import_rev">Import</a></li>
+        <li><a href="./search_r">Search</a></li>
+        <li><a href="./capax">Capax</a></li>
 
     </ul>
+    <%- locals.flash %>
     <div class="row">
         <div class="container">
             <h3 class="col-sm-6">Assets Management</h3>
@@ -107,8 +108,9 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleModelDescp">Model Description</label>
-                            <textarea  rows="8" style="height:211px;" type="textarea" class="form-control modeldescp"
-                                name="exampleModelDescp" id="exampleModelDescp" autocomplete="off"
+                            <input type="text" rows="6" style="height:211px;" type="textarea"
+                                class="form-control modeldescp" id="exampleModelDescp" name="exampleModelDescp"
+                                value="<%= exampleModelDescp %>" autocomplete="off"
                                 placeholder="Enter Model Description"> </textarea>
                         </div>
                     </div>
@@ -128,3 +130,4 @@
 
     <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
 </body>
+</html>

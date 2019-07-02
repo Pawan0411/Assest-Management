@@ -9,9 +9,60 @@ const crypto = require('crypto');
 const methodOverride = require('method-override');
 const path = require('path');
 const fs = require('fs');
-var flash = require('connect-flash');
+const flash = require('express-flash-notification');
 var session = require('express-session')
 var cookieparser = require('cookie-parser')
+const MongoClient = require('mongodb').MongoClient;
+
+const flashNotificationOptions = {
+  beforeSingleRender: function (item, callback) {
+    if (item.type) {
+      switch (item.type) {
+        case 'Success-form':
+          item.type = 'Submitted Successfully!!';
+          item.alertClass = 'alert-success';
+          break;
+        case 'Error-form':
+          item.type = 'Soory, Submission Failed!';
+          item.alertClass = 'alert-danger';
+          break;
+        case 'No-Data':
+          item.type = 'No data found.';
+          item.alertClass = 'alert-info';
+          break;
+        case 'Error-retrive':
+          item.type = 'Soory, an error occurred';
+          item.alertClass = 'alert-danger';
+          break;
+        case 'Success-retrive':
+          item.type = 'Retrived Successfully!!';
+          item.alertClass = 'alert-success';
+          break;
+        case 'Delete':
+          item.type = 'Deleted Successfully';
+          item.alertClass = 'alert-danger';
+          break;
+        case 'Import':
+          item.type = 'Please import file';
+          item.alertClass = 'alert-info';
+          break;
+        case 'Export-Success':
+          item.type = 'Exported Successfully!!';
+          item.alertClass = 'alert-success';
+          break;
+        case 'Export-Error':
+          item.type = 'Soory, export failed'
+          item.alertClass = 'alert-danger';
+          break;
+        case 'Update':
+          item.type = 'DataBase Updated';
+          item.alertClass = 'alert-success';
+          break;
+      }
+    }
+    callback(null, item);
+  }
+};
 
 app.use(cookieparser('secret123'));
 app.use(session({
@@ -19,14 +70,16 @@ app.use(session({
   saveUninitialized: true,
   resave: true
 }));
-app.use(flash());
+app.use(flash(app, flashNotificationOptions));
 
 /**
  * Mongoose Setup
  */
 const mongoose = require('mongoose');
 const mongoURI = 'mongodb://localhost:27017/assets';
+const atlasURI = 'mongodb+srv://Pawan:<pawan0411>@cluster0-wjztj.mongodb.net/test?retryWrites=true&w=majority';
 mongoose.connect(mongoURI);
+
 
 
 var db = mongoose.connection;
@@ -75,12 +128,11 @@ var Schema = mongoose.Schema;
 var capaxSchema = new Schema({ name: Object }, { strict: false });
 var Capax = mongoose.model('Capax', capaxSchema);
 
-
+var name;
 app.post('/upload', upload.single('file'), (req, res) => {
-  req.flash('exporty_err', 'Error Occured');
-  req.flash('database', 'Error Ocurred');
   const chunks = [];
   const readStream = gfs.createReadStream(req.file.id);
+  name = req.file.originalname;
   readStream.on("data", function (chunk) {
     chunks.push(chunk);
   });
@@ -88,10 +140,29 @@ app.post('/upload', upload.single('file'), (req, res) => {
     Buffer.concat(chunks)
     let json = chunks.toString('utf-8')
     var data = new Capax({ json });
-    data.save()
-    res.redirect('/')
+    data.save();
+    res.render('cap_imp', {file : name});
   })
+
 });
+
+app.post('/upload_r', upload.single('file'), (req, res) => {
+  const chunks = [];
+  const readStream = gfs.createReadStream(req.file.id);
+  name = req.file.originalname;
+  readStream.on("data", function (chunk) {
+    chunks.push(chunk);
+  });
+  readStream.on("end", function () {
+    Buffer.concat(chunks)
+    let json = chunks.toString('utf-8')
+    var data = new Capax({ json });
+    data.save();
+    res.render('rev_imp', {file : name});
+  })
+
+});
+
 
 app.get('/files', (req, res) => {
   gfs.files.find().toArray((err, files) => {
@@ -162,11 +233,11 @@ app.post('/capax_save', function (req, res) {
   db.collection('Capax').insertOne(data, function (err, collection) {
     if (err) {
       console.log('error ocuured');
-      res.send(req.flash('submit_err'));
+      req.flash('Error-form', '', '/capax');
     }
     else {
       console.log("Record inserted Successfully");
-      res.redirect("/capax");
+      req.flash('Success-form', '', '/capax');
     }
   });
 })
@@ -178,72 +249,81 @@ app.post('/capax_search', function (req, res) {
     datas = [];
   }
   var serialnum = req.body.exampleserailNumber_c
-  req.flash("retrive_err", "No data found");
-  req.flash("succes_err", "Some error ocuured");
-  req.flash("del_err", "Please retrive the data first")
-  req.flash("edit_er", "Please retrive the data first")
-  req.flash('delete_s', 'Deleted Succcessfully');
   db.collection('Capax').find({ 'serialNumber': serialnum }).toArray((err, docs) => {
-    if (err) throw err
+    if (err) {
+      console.log(err);
+      req.flash('Error-retrive', '', '/search_c');
+    } else {
+      req.flash('Success-retrive', '', '');
+      length = docs.length;
+      console.log(length);
+      var i;
+      for (i = 0; i < length; i++) {
+        datas.push({
+          c_serialnum: serialnum,
+          serialNumber: docs[i].serialNumber,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          invoiceNumber: docs[i].invoiceNumber,
+          receiveDate: docs[i].receiveDate,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          summit: docs[i].summit,
+          del_id: docs[i]._id
+        });
+      }
 
-    length = docs.length;
-    console.log(length);
-    var i;
-    for (i = 0; i < length; i++) {
-      datas.push({
-        c_serialnum: serialnum,
-        serialNumber: docs[i].serialNumber,
-        sapCode: docs[i].sapCode,
-        materialCode: docs[i].materialCode,
-        materialQuantity: docs[i].materialQuantity,
-        poDate: docs[i].poDate,
-        poNum: docs[i].poNum,
-        invoiceDate: docs[i].invoiceDate,
-        invoiceNumber: docs[i].invoiceNumber,
-        receiveDate: docs[i].receiveDate,
-        model: docs[i].model,
-        modelDesp: docs[i].modelDesp,
-        summit: docs[i].summit,
-        del_id: docs[i]._id
-      });
+      res.redirect('/c');
     }
-
-    res.redirect('/c');
   });
-
 })
 
 /**
  * Add import data to mongoose database
  */
 const collectionchunks = db.collection('uploads.chunks')
-
+var dat = []
 app.post('/retrive', function (req, res) {
   var json;
   collectionchunks.find({}, { sort: { '_id': -1 } })
     .toArray(function (err, docs) {
-      var dat = []
-      dat.push({
-        id: docs[0]._id
-      });
-      console.log(dat[0].id);
-      var id = dat[0].id;
-      collectionchunks.findOne({ '_id': id }, function (err, collection) {
-        if (err) throw err
-        var text = collection.data.toString('utf-8');
-        console.log(text.replace(/\s/, ''));
-        var tex = text.replace(/\s/, '');
-        json = JSON.parse(tex);
-        db.collection('Capax').insertMany(json, function (err, collection) {
+      console.log(docs.length)
+      if (err) {
+        console.log(err);
+        req.flash('Import', '', '/import_cap');
+      } else {
+        dat.push({
+          id: docs[0]._id
+        });
+        console.log(dat[0].id);
+        var id = dat[0].id;
+        console.log(id);
+        collectionchunks.findOne({ '_id': id }, function (err, collection) {
           if (err) {
             console.log(err);
-            res.send(req.flash('database'));
+            req.flash('Import', '', '/import_cap');
           } else {
-            console.log('Record insterted');
-            res.redirect('/');
-          }
+            var text = collection.data.toString('utf-8');
+            console.log(text.replace(/\s/, ''));
+            var tex = text.replace(/\s/, '');
+            json = JSON.parse(tex);
+            db.collection('Capax').insertMany(json, function (err, collection) {
+              if (err) {
+                console.log(err);
+                req.flash('Error-form', '', '/import_cap');
+              } else {
+                req.flash('Update', '', '/');
+                dat = [];
+                console.log(id);
+              }
+            })
+        }
         })
-      })
+      }
     })
 })
 
@@ -254,21 +334,17 @@ app.post('/export', function (req, res) {
     fs.writeFile('Output.json', JSON.stringify(docs), function (err) {
       if (err) {
         console.log(err);
-
-        res.send(req.flash('export_err'));
+        req.flash('Export-Error', '', '/import_cap');
       } else {
         console.log('Saved');
-        res.redirect('/');
+        req.flash('Export-Success', '', '/');
       }
     });
   })
 })
 
 
-app.post('/capax_his', function (req, res) {
-  req.flash('prev_err', 'No data found');
-  req.flash('next_err', 'No data found');
-  req.flash('delete_suc', 'Deleted Successfully')
+app.get('/capax_his', function (req, res) {
   var i;
   var rec = [];
   for (i = 0; i < length; i++) {
@@ -290,7 +366,7 @@ app.post('/capax_his', function (req, res) {
   }
   if (rec == null) {
     console.log('No data Found');
-    res.send(req.flash('retrive_err'));
+    req.flash('No-Data', '', '/search_c');
   }
   else {
     res.render('capax_his', {
@@ -336,16 +412,15 @@ app.get('/next', function (req, res) {
   }
   if (rec == null) {
     console.log('No data Found');
-    res.send(req.flash('retrive_err'));
+    req.flash('No-Data', '', '/search_c');
   }
   else {
     console.log(j);
     j++;
     console.log(j);
     if (j == length) {
-      console.log('No data found');
+      req.flash('No-Data', '', '/capax_his');
       j--;
-      res.send(req.flash('next_err'));
     } else {
       console.log(rec[j]);
       res.render('capax_his', {
@@ -373,7 +448,7 @@ app.get('/prev', function (req, res) {
   }
   if (j == 0) {
     console.log('No data')
-    res.send(req.flash('prev_err'));
+    req.flash('No-Data', '', '/capax_his');
   } else {
     var i;
     for (i = 0; i < length; i++) {
@@ -395,7 +470,7 @@ app.get('/prev', function (req, res) {
     }
     if (rec == null) {
       console.log('No data Found');
-      res.send(req.flash('retrive_err'));
+      req.flash('No-Data', '', '/search_c');
     }
     else {
       console.log(j);
@@ -428,7 +503,7 @@ app.get('/c', function (req, res) {
   }
   if (rec == null) {
     console.log('No data Found');
-    res.send(req.flash('retrive_err'));
+    req.flash('No-Data', '', '/search_c');
   }
   else {
     res.render('capax_se', {
@@ -450,22 +525,21 @@ app.get('/c', function (req, res) {
   }
 })
 
-app.post('/capax_del', function (req, res) {
+app.get('/capax_del', function (req, res) {
   var i;
   var rec = [];
   for (i = (length - 1); i < length; i++) {
     rec = datas[i];
   }
   if (rec == null) {
-    console.log('Please Retrive the data first');
-    res.send(req.flash('del_er'));
+    console.log('No Data');
+    req.flash('No-Data', '', '/search_c');
   }
   else {
     db.collection('Capax').deleteOne({ '_id': rec.del_id })
       .then(function (results) {
-        res.send(req.flash('delete_s'));
+        req.flash('Delete', '', '/search_c');
         console.log('Deleted SuccessFully');
-        res.redirect('/c');
       })
   }
 })
@@ -477,21 +551,20 @@ app.get('/capax_dl', function (req, res) {
     rec = datas[i];
   }
   if (rec == null) {
-    console.log('Please Retrive the data first');
-    res.send(req.flash('del_er'));
+    console.log('No Data');
+    req.flash('No-Data', '', '/search_c');
   }
   else {
     db.collection('Capax').deleteOne({ '_id': rec.del_id })
       .then(function (results) {
-        res.send(req.flash('delete_suc'));
+        req.flash('Delete', '', '/search_c');
         console.log('Deleted SuccessFully');
-        res.redirect('/capax_dl');
       })
   }
 })
 
 var data_ed;
-app.post('/capax_edit', function (req, res) {
+app.get('/capax_edit', function (req, res) {
   console.log(req.body)
   var i;
   var rec = [];
@@ -499,8 +572,8 @@ app.post('/capax_edit', function (req, res) {
     rec = datas[i];
   }
   if (rec == null) {
-    console.log('Please Retrive the data first');
-    res.send(req.flash('edit_err'));
+    console.log('No Data');
+    req.flash('No-Data', '', '/search_c');
   }
   else {
     res.render('capax_edit', {
@@ -551,9 +624,13 @@ app.post('/editc_save', function (req, res) {
     "summit": summit
   }
   db.collection('Capax').insertOne(data_ed, function (err, collection) {
-    if (err) throw err
-    console.log('Record Inserted');
-    res.redirect('/search_c');
+    if (err) {
+      console.log(err)
+      req.flash('Error-form', '', '/capax_edit');
+    } else {
+      console.log('Record Inserted');
+      req.flash('Success-form', '', '/search_c');
+    }
   })
 })
 
@@ -589,11 +666,11 @@ app.post('/revenue_save', function (req, res) {
   db.collection('Revenue').insertOne(data, function (err, collection) {
     if (err) {
       console.log('error ocuured');
-      res.send(req.flash('submit_err'));
+      req.flash('Success-form', '', '/revenue');
     }
     else {
       console.log("Record inserted Successfully");
-      res.redirect("/revenue");
+      req.flash('Success-form', '', '/revenue');
     }
   });
 })
@@ -606,35 +683,33 @@ app.post('/revenue_search', function (req, res) {
   }
   var serialnum = req.body.exampleserailNumber_r
   console.log(serialnum);
-  req.flash("retrive_er", "No data found");
-  req.flash("succes_er", "Some error ocuured");
-  req.flash("del_er", "Please retrive the data first")
-  req.flash("edit_e", "Please retrive the data first")
-  req.flash('delete_sc', 'Deleted Succcessfully');
   db.collection('Revenue').find({ 'serialNumber': serialnum }).toArray((err, docs) => {
-    if (err) throw err
-
-    length = docs.length;
-    console.log(length);
-    var i;
-    for (i = 0; i < length; i++) {
-      datas.push({
-        r_serialnum: serialnum,
-        serialNumber: docs[i].serialNumber,
-        sapCode: docs[i].sapCode,
-        materialCode: docs[i].materialCode,
-        materialQuantity: docs[i].materialQuantity,
-        poDate: docs[i].poDate,
-        poNum: docs[i].poNum,
-        invoiceDate: docs[i].invoiceDate,
-        receiveDate: docs[i].receiveDate,
-        model: docs[i].model,
-        modelDesp: docs[i].modelDesp,
-        del_id: docs[i]._id
-      });
+    if (err) {
+      console.log(err);
+      req.flash('Error-retrive', '', '/search_r');
+    } else {
+      req.flash('Success-retrive', '', '');
+      length = docs.length;
+      console.log(length);
+      var i;
+      for (i = 0; i < length; i++) {
+        datas.push({
+          r_serialnum: serialnum,
+          serialNumber: docs[i].serialNumber,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          receiveDate: docs[i].receiveDate,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          del_id: docs[i]._id
+        });
+      }
+      res.redirect('/r');
     }
-
-    res.redirect('/r');
   });
 
 })
@@ -647,7 +722,7 @@ app.get('/r', function (req, res) {
   }
   if (rec == null) {
     console.log('No data Found');
-    res.send(req.flash('retrive_er'));
+    req.flash('No-Data', '', '/search_r');
   }
   else {
     res.render('revenue_se', {
@@ -669,27 +744,26 @@ app.get('/r', function (req, res) {
   }
 })
 
-app.post('/revenue_del', function (req, res) {
+app.get('/revenue_del', function (req, res) {
   var i;
   var rec = [];
   for (i = (length - 1); i < length; i++) {
     rec = datas[i];
   }
   if (rec == null) {
-    console.log('Please Retrive the data first');
-    res.send(req.flash('del_er'));
+    console.log('No Data');
+    req.flash('No-Data', '', '/search_r');
   }
   else {
     db.collection('Revenue').deleteOne({ '_id': rec.del_id })
       .then(function (results) {
-        res.send(req.flash('delete_sc'));
+        req.flash('Delete', '', '/search_r');
         console.log('Deleted SuccessFully');
-        res.redirect('/r');
       })
   }
 })
 
-app.post('/revenue_edit', function (req, res) {
+app.get('/revenue_edit', function (req, res) {
   console.log(req.body)
   var i;
   var rec = [];
@@ -697,8 +771,8 @@ app.post('/revenue_edit', function (req, res) {
     rec = datas[i];
   }
   if (rec == null) {
-    console.log('Please Retrive the data first');
-    res.send(req.flash('edit_er'));
+    console.log('No Data');
+    req.flash('No-Data', '', '/search_r');
   }
   else {
     res.render('revenue_edit', {
@@ -716,10 +790,7 @@ app.post('/revenue_edit', function (req, res) {
   }
 })
 
-app.post('/revenue_his', function (req, res) {
-  req.flash('prev_err', 'No data found');
-  req.flash('next_err', 'No data found');
-  req.flash('delete_suc', 'Deleted Successfully')
+app.get('/revenue_his', function (req, res) {
   var i;
   var rec = [];
   for (i = 0; i < length; i++) {
@@ -739,7 +810,7 @@ app.post('/revenue_his', function (req, res) {
   }
   if (rec == null) {
     console.log('No data Found');
-    res.send(req.flash('retrive_er'));
+    req.flash('No-Data', '', '/search_r');
   }
   else {
     res.render('revenue_his', {
@@ -758,7 +829,7 @@ app.post('/revenue_his', function (req, res) {
 })
 var rec = [];
 var j = 0;
-app.get('/next', function (req, res) {
+app.get('/next_r', function (req, res) {
   if (!rec == []) {
     rec = [];
   }
@@ -781,16 +852,15 @@ app.get('/next', function (req, res) {
   }
   if (rec == null) {
     console.log('No data Found');
-    res.send(req.flash('retrive_er'));
+    req.flash('No-Data', '', '/search_r');
   }
   else {
     console.log(j);
     j++;
     console.log(j);
     if (j == length) {
-      console.log('No data found');
+      req.flash('No-Data', '', '/revenue_his');
       j--;
-      res.send(req.flash('next_er'));
     } else {
       console.log(rec[j]);
       res.render('revenue_his', {
@@ -810,13 +880,13 @@ app.get('/next', function (req, res) {
   }
 })
 
-app.get('/prev', function (req, res) {
+app.get('/prev_r', function (req, res) {
   if (!rec == []) {
     rec = [];
   }
   if (j == 0) {
     console.log('No data')
-    res.send(req.flash('prev_er'));
+    req.flash('No-Data', '', '/revenue_his');
   } else {
     var i;
     for (i = 0; i < length; i++) {
@@ -836,7 +906,7 @@ app.get('/prev', function (req, res) {
     }
     if (rec == null) {
       console.log('No data Found');
-      res.send(req.flash('retrive_er'));
+      req.flash('No-Data', '', '/search_r');
     }
     else {
       console.log(j);
@@ -891,9 +961,69 @@ app.post('/editr_save', function (req, res) {
     "summit": summit
   }
   db.collection('Revenue').insertOne(data_ed, function (err, collection) {
+    if (err) {
+      console.log(err);
+      req.flash('Error-form', '', '/revenue_edit');
+    } else {
+      console.log('Record Inserted');
+      req.flash('Success-form', '', '/search_r');
+    }
+  })
+})
+
+app.post('/retrive_r', function (req, res) {
+  var json;
+  collectionchunks.find({}, { sort: { '_id': -1 } })
+    .toArray(function (err, docs) {
+      console.log(docs.length)
+      if (err) {
+        console.log(err);
+        req.flash('Import', '', '/import_rev');
+      } else {
+        dat.push({
+          id: docs[0]._id
+        });
+        console.log(dat[0].id);
+        var id = dat[0].id;
+        console.log(id);
+        collectionchunks.findOne({ '_id': id }, function (err, collection) {
+          if (err) {
+            console.log(err);
+            req.flash('Import', '', '/import_rev');
+          } else {
+            var text = collection.data.toString('utf-8');
+            console.log(text.replace(/\s/, ''));
+            var tex = text.replace(/\s/, '');
+            json = JSON.parse(tex);
+            db.collection('Revenue').insertMany(json, function (err, collection) {
+              if (err) {
+                console.log(err);
+                req.flash('Error-form', '', '/import_rev');
+              } else {
+                req.flash('Update', '', '/');
+                dat = [];
+                console.log(id);
+              }
+            })
+        }
+        })
+      }
+    })
+})
+
+app.post('/export_r', function (req, res) {
+  db.collection('Revenue').find().toArray(function (err, docs) {
     if (err) throw err
-    console.log('Record Inserted');
-    res.redirect('/search_r');
+    console.log(docs);
+    fs.writeFile('data-revenue.json', JSON.stringify(docs), function (err) {
+      if (err) {
+        console.log(err);
+        req.flash('Export-Error', '', '/import_rev');
+      } else {
+        console.log('Saved');
+        req.flash('Export-Success', '', '/');
+      }
+    });
   })
 })
 
@@ -904,12 +1034,10 @@ app.get('/capax', (req, res) => res.render('capax'));
 app.get('/revenue', (req, res) => res.render('revenue'));
 app.get('/search_c', (req, res) => res.render('search_c'));
 app.get('/search_r', (req, res) => res.render('search_r'));
-app.get('/import_cap', (req, res) => res.render('import_cap'))
-
-
-
+app.get('/import_cap', (req, res) => res.render('import_cap'));
+app.get('/import_rev', (req, res) => res.render('import_rev'));
 // LOCAL
-// app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 // HEROKU
-app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))
+// app.listen(process.env.PORT, process.env.IP, () => console.log("Server started ..."))

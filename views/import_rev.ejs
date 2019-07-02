@@ -60,15 +60,16 @@
                         <form action="https://codebeautify.org/excel-to-json">
                             <input type="submit" value="Convert" class="btn btn-warning" />
                         </form>
-                        <legend class="">capax</legend>
-                        <form action="/upload" method="POST" enctype="multipart/form-data">
+                        <legend class="">Revenue</legend>
+                        <form action="/upload_r" method="POST" enctype="multipart/form-data">
                             <div class="custom-file mb-3">
                                 <input type="file" name="file" id="file" class="custom-file-input">
-                                <label for="file" class="custom-file-label">Import JSON file</label>
+                                <label for="file" class="custom-file-label">Import JSON fileName</label>
                             </div>
                             <input type="submit" value="Import" class="btn btn-primary">
-                            <input type="submit" disabled="disabled" formaction="/retrive" value="Add to Database" class="btn btn-success">
-                            <input type="submit" formaction="/export" value="Export" class="btn btn-primary">
+                            <input type="submit" disabled="disabled" formaction="/retrive_r" value="Add to Database"
+                                class="btn btn-success">
+                            <input type="submit" formaction="/export_r" value="Export" class="btn btn-primary">
                         </form>
                     </div>
                 </div>

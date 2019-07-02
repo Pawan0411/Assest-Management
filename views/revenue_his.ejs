@@ -42,16 +42,17 @@
 
 <body>
     <ul>
-        <li><a href="#">Import Data</a></li>
-        <li><a href="./search_r">Search Data</a></li>
+        <li><a href="./import_rev">Import</a></li>
+        <li><a href="./search_r">Search</a></li>
         <li><a href="./capax">Capax</a></li>
 
     </ul>
+    <%- locals.flash %>
     <div class="row">
         <div class="container">
             <h3 class="col-sm-6">Assets Management</h3>
             <legend class="col-sm-6">Revenue</legend>
-            <form action="/next" method="GET">
+            <form action="/next_r" method="GET">
                 <div class="sub-entry col-sm-6">
                 <div class="form-group">
                     <label for="exampleserailNumber">Serial Number</label>
@@ -104,14 +105,15 @@
                 </div>
                 <div class="form-group">
                     <label for="exampleModelDescp">Model Description</label>
-                    <textarea rows="6" cols="70" type="textarea" class="form-control modeldescp"
-                    style="height:211px;" disabled="disabled" name="exampleModelDescp" id="exampleModelDescp" autocomplete="off"
+                    <input type="text" readonly="readonly" rows="6" style="height:211px;" type="textarea"
+                        class="form-control modeldescp" id="exampleModelDescp" name="exampleModelDescp"
+                        value="<%= exampleModelDescp %>" autocomplete="off"
                         placeholder="Enter Model Description"> </textarea>
                 </div>
             </div>
                 <button type="next" class="btn btn-success" id="next">Next</button>
-                <button type="prev" class="btn btn-success" formaction="/prev" id="prev">Prev</button>
-                <button type="del" class="btn btn-danger" formaction="/capax_dl" id="del">Delete</button>
+                <button type="prev" class="btn btn-success" formaction="/prev_r" id="prev">Prev</button>
+                <button type="del" class="btn btn-danger" formaction="/revenue_del" id="del">Delete</button>
                
             </form>
             </div>
@@ -126,5 +128,5 @@
     <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
-    <!-- <script src="app_c.js"></script> -->
 </body>
+</html>

@@ -50,24 +50,26 @@
         <li><a href="./capax">Capax</a></li>
         <li><a href="./revenue">Revenue</a></li>
     </ul>
-    <%- locals.flash %>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Please add your file to Database
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" id="cardetails">
                 <div class="card card-signin my-5">
                     <div class="card-body">
-                        <p><b>Note : </b>Please convert your excel file to JSON file</p>
-                        <form action="https://codebeautify.org/excel-to-json">
-                            <input type="submit" value="Convert" class="btn btn-warning" />
-                        </form>
-                        <legend class="">capax</legend>
-                        <form action="/upload" method="POST" enctype="multipart/form-data">
+                        <legend class="">Capax</legend>
+                        <form action="/retrive" method="POST" enctype="multipart/form-data">
                             <div class="custom-file mb-3">
-                                <input type="file" name="file" id="file" class="custom-file-input">
-                                <label for="file" class="custom-file-label">Import JSON file</label>
+                                <input type="text" readonly="readonly" name="file" value="<%= file %>" id="file"
+                                    class="form-control">
+                                <!-- <label for="file" class="custom-file-label">Choose File</label> -->
                             </div>
-                            <input type="submit" value="Import" class="btn btn-primary">
-                            <input type="submit" disabled="disabled" formaction="/retrive" value="Add to Database" class="btn btn-success">
+                            <input type="submit" value="Add to Database" class="btn btn-success">
+                            <input type="submit" value="Import" disabled="disabled" class="btn btn-primary">
                             <input type="submit" formaction="/export" value="Export" class="btn btn-primary">
                         </form>
                     </div>
@@ -75,15 +77,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $('#file').on('change', function () {
-            //get the file name
-            var fileName = $(this).val().replace('C:\\fakepath\\', " ");
-            //replace the "Choose a file" label
-            $(this).next('.custom-file-label').html(fileName);
-        })
-    </script>
 </body>
 
 </html>

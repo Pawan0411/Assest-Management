@@ -42,11 +42,12 @@
 
 <body>
     <ul>
-        <li><a href="#">Import Data</a></li>
-        <li><a href="./search_c">Search Data</a></li>
+        <li><a href="./import_cap">Import</a></li>
+        <li><a href="./search_c">Search</a></li>
         <li><a href="./revenue">Revenue</a></li>
 
     </ul>
+    <%- locals.flash %>
     <div class="row">
         <div class="container">
             <h3 class="col-sm-6">Assets Management</h3>
@@ -110,23 +111,19 @@
                 </div>
                 <div class="form-group">
                     <label for="exampleModelDescp">Model Description</label>
-                    <textarea rows="6" cols="70" type="textarea" class="form-control modeldescp"
-                    style="height:211px;" disabled="disabled" name="exampleModelDescp" id="exampleModelDescp" autocomplete="off"
+                    <input type="text" readonly="readonly" rows="6" style="height:211px;" type="textarea"
+                        class="form-control modeldescp" id="exampleModelDescp" name="exampleModelDescp"
+                        value="<%= exampleModelDescp %>" autocomplete="off"
                         placeholder="Enter Model Description"> </textarea>
                 </div>
                 <div class="form-group">
                     <label for="exampleUpdateSummit">Updated In Summit</label>
-                    <select class="form-control summit" name="exampleUpdateSummit" disabled="disabled" id="exampleUpdateSummit"
-                        autocomplete="off" placeholder="Enter Sap Code">
-                        <option value="" disabled selected>Select</option>
-                        <option value="YES">YES</option>
-                        <option value="NO">NO</option>
-                    </select>
+                    <input type="text" readonly="readonly" id=" exampleUpdateSummit " class="form-control model" name="exampleUpdateSummit" value="<%= exampleUpdateSummit %> ">
                 </div>
             </div>
                 <button type="next" class="btn btn-success" id="next">Next</button>
                 <button type="prev" class="btn btn-success" formaction="/prev" id="prev">Prev</button>
-                <button type="del" class="btn btn-danger" formaction="/capax_dl" id="del">Delete</button>
+                <button type="del" class="btn btn-danger" formaction="/revenue_del" id="del">Delete</button>
                
             </form>
             </div>
@@ -143,3 +140,4 @@
     <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
     <!-- <script src="app_c.js"></script> -->
 </body>
+</html>

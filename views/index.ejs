@@ -8,52 +8,37 @@
   <title>Assets Management</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <style>
-    ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background-color: white;
-    }
-
-    li {
-      float: left;
-    }
-
-    li a {
-      display: block;
-      color: black;
-      text-align: center;
-      padding: 14px 16px;
-      text-decoration: none;
-    }
-
-    li a:hover {
-      background-color: #ffffff;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <ul id="nav-bar" >
-    <li><a href="./capax">Capax</a></li>
-    <li><a href="./revenue">Revenue</a></li>
-  </ul>
-  <h3 align="center" id="welcome" style="visibility: hidden">Welcome User.</h3>
+  <%- locals.flash %>
   <div class="container">
     <div class="row">
 
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" id="cardetails">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" >
         <div class="card card-signin my-5">
-          <div class="card-body">
+          <div class="card-body" style="height: auto">
+              <div style="visibility:hidden" id="assets">
+                  <h3 align="center" id="welcome" >Welcome User &#128519; </h3>
+          <nav id="nav-bar" class="navbar navbar-expand-sm navbar-default bg-default">
+              <ul class="navbar-nav mx-auto">
+                  <li class="nav-item">
+                      <a href="./capax" class="hvr-grow nav-link">CAPAX</a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="./revenue" class="hvr-grow nav-link" >REVENUE</a>
+                  </li>
+              </ul>
+          </nav>
+          </div>
+            <div  id="cardetails">
             <h5 class="card-title text-center">Sign In Here</h5>
 
             <form class="form-signin">
               <div class="form-label-group">
                 <label for="inputPassword">OTP</label>
                 <input type="text" id="inputPassword" class="form-control" placeholder="Enter OTP" required>
-
               </div>
               <br>
               <button class="btn btn-lg btn-primary btn-block text-uppercase" id="sign-in-button" type="submit">Sign
@@ -63,9 +48,11 @@
             <button disabled="disabled" class="btn btn-danger btn-block text-uppercase" id="resend" type="submit">Resend
               Code</button>
           </div>
+          
         </div>
-      </div>
+        </div>
     </div>
+  </div>
   </div>
 
 

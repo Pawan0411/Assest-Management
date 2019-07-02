@@ -45,17 +45,18 @@
 
 <body>
     <ul>
-        <li><a href="#">Import</a></li>
+        <li><a href="./import_cap">Import</a></li>
         <li><a href="./capax">Capax</a></li>
         <li><a href="./revenue">Revenue</a></li>
         <li><a href="./search_c">Search </a></li>
 
     </ul>
+    <%- locals.flash %>
     <div class="row">
         <div class="container">
             <h3 >Assets Management</h3>
             <legend >Capax</legend>
-            <form id="capaxdetails" action="/capax_del" method="POST">
+            <form id="capaxdetails" action="/capax_del" method="GET">
                
                     <div class="form-group">
                         <label for="exampleserailNumber">Serial Number</label>
@@ -134,19 +135,14 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleModelDescp">Model Description</label>
-                            <textarea readonly="readonly" rows="6" style="height:211px;" cols="70" type="textarea"
+                            <input type="text" readonly="readonly" rows="6" style="height:211px;" type="textarea"
                                 class="form-control modeldescp" id="exampleModelDescp" name="exampleModelDescp"
                                 value="<%= exampleModelDescp %>" autocomplete="off"
                                 placeholder="Enter Model Description"> </textarea>
                         </div>
                         <div class="form-group">
                             <label for="exampleUpdateSummit">Updated In Summit</label>
-                            <select disabled="disabled" class="form-control summit" name="exampleUpdateSummit"
-                                id="exampleUpdateSummit" autocomplete="off" value="<%= exampleModelDescp %>">
-                                <option value="" disabled selected>Select</option>
-                                <option value="YES">YES</option>
-                                <option value="NO">NO</option>
-                            </select>
+                            <input type="text" readonly="readonly" id=" exampleUpdateSummit " class="form-control model" name="exampleUpdateSummit" value="<%= exampleUpdateSummit %> ">
                         </div>
                     </div>
             </form>
@@ -160,5 +156,5 @@
     <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
-    <script src="search_c.js"></script>
 </body>
+</html>
