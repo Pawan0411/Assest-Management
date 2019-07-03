@@ -70,7 +70,7 @@ const flashNotificationOptions = {
           item.type = 'Soory, path error';
           item.alertClass = 'alert-danger';
           break;
-        case  'Excel_err':
+        case 'Excel_err':
           item.type = 'Please import excel file';
           item.alertClass = 'alert-warning';
           break;
@@ -183,33 +183,40 @@ app.post('/upload', function (req, res) {
     fs.readFile(path, { encoding: 'utf-8' }, function (err, data) {
       if (err) {
         console.log(err);
-        req.flash('Path_err','', '/import_cap');
+        req.flash('Path_err', '', '/import_cap');
       } else {
         console.log(path);
-        xlsxtojson({
-          input: path,  // input xls 
-          output: "output.json", // output json 
-          lowerCaseHeaders: true
-        }, function (err, result) {
-          if (err) {
-            console.log(err);
-            console.log('Please upload xlsx files');
-            req.flash('Excel_err','',  '/import_cap');
-          } else {
-            console.log(result)
-            db.collection('Capax').insertMany(result, function (err, collection) {
-              if (err) {
-                console.log(err);
-                req.flash('Error-form', '', '/import_cap');
-              } else {
-                req.flash('Update', '', '/');
-                dat = [];
-              }
-            })
-          }
-        })
-       }
-     })
+        var ext = name.split('.').pop();
+        if (ext == 'xlsx') {
+          console.log('Hello');
+          xlsxtojson({
+            input: path,  // input xls 
+            output: "output.json", // output json 
+            lowerCaseHeaders: true
+          }, function (err, result) {
+            if (err) {
+              console.log(err);
+              console.log('Please upload xlsx files');
+              req.flash('Excel_err', '', '/import_cap');
+            } else {
+              console.log(result)
+              db.collection('Capax').insertMany(result, function (err, collection) {
+                if (err) {
+                  console.log(err);
+                  req.flash('Error-form', '', '/import_cap');
+                } else {
+                  req.flash('Update', '', '/');
+                  dat = [];
+                }
+              })
+            }
+          })
+
+        } else {
+          req.flash('Excel_err', '', '/import_cap');
+        }
+      }
+    })
   }
 });
 
@@ -251,28 +258,34 @@ app.post('/upload_r', upload.single('file'), (req, res) => {
         console.log(err);
         req.flash('Path_err', '/import_rev');
       } else {
-        xlsxtojson({
-          input: path,  // input xls 
-          output: "output.json", // output json 
-          lowerCaseHeaders: true
-        }, function (err, result) {
-          if (err) {
-            console.log(err);
-            console.log('Please upload xlsx files');
-            req.flash('Excel_err', '/import_rev');
-          } else {
-            console.log(result)
-            db.collection('Revenue').insertMany(result, function (err, collection) {
-              if (err) {
-                console.log(err);
-                req.flash('Error-form', '', '/import_rev');
-              } else {
-                req.flash('Update', '', '/');
-                dat = [];
-              }
-            })
-          }
-        })
+        var ext = name.split('.').pop();
+        if (ext == 'xlsx') {
+          console.log('Hello');
+          xlsxtojson({
+            input: path,  // input xls 
+            output: "output.json", // output json 
+            lowerCaseHeaders: true
+          }, function (err, result) {
+            if (err) {
+              console.log(err);
+              console.log('Please upload xlsx files');
+              req.flash('Excel_err', '/import_rev');
+            } else {
+              console.log(result)
+              db.collection('Revenue').insertMany(result, function (err, collection) {
+                if (err) {
+                  console.log(err);
+                  req.flash('Error-form', '', '/import_rev');
+                } else {
+                  req.flash('Update', '', '/');
+                  dat = [];
+                }
+              })
+            }
+          })
+        } else {
+          req.flash('Excel_err', '', '/import_rev');
+        }
       }
     })
   }
@@ -446,15 +459,20 @@ app.post('/export', function (req, res) {
   db.collection('Capax').find().toArray(function (err, docs) {
     if (err) throw err
     console.log(docs);
-    fs.writeFile('Output.json', JSON.stringify(docs), function (err) {
-      if (err) {
-        console.log(err);
-        req.flash('Export-Error', '', '/import_cap');
-      } else {
-        console.log('Saved');
-        req.flash('Export-Success', '', '/');
-      }
-    });
+    if (!docs.length) {
+      console.log('No data to export.')
+      req.flash('Export-Error', '', '/import_cap');
+    } else {
+      fs.writeFile('data-capax.json', JSON.stringify(docs), function (err) {
+        if (err) {
+          console.log(err);
+          req.flash('Export-Error', '', '/import_cap');
+        } else {
+          console.log('Exported');
+          req.flash('Export-Success', '', '/');
+        }
+      });
+    }
   })
 })
 
@@ -1130,15 +1148,20 @@ app.post('/export_r', function (req, res) {
   db.collection('Revenue').find().toArray(function (err, docs) {
     if (err) throw err
     console.log(docs);
-    fs.writeFile('data-revenue.json', JSON.stringify(docs), function (err) {
-      if (err) {
-        console.log(err);
-        req.flash('Export-Error', '', '/import_rev');
-      } else {
-        console.log('Saved');
-        req.flash('Export-Success', '', '/');
-      }
-    });
+    if (!docs.length) {
+      console.log('No data to export.')
+      req.flash('Export-Error', '', '/import_cap');
+    } else {
+      fs.writeFile('data-revenue.json', JSON.stringify(docs), function (err) {
+        if (err) {
+          console.log(err);
+          req.flash('Export-Error', '', '/import_rev');
+        } else {
+          console.log('Exported');
+          req.flash('Export-Success', '', '/');
+        }
+      });
+    }
   })
 })
 
