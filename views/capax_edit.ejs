@@ -32,6 +32,7 @@
         li a:hover {
             background-color: #ffffff;
         }
+
         .sub-entry {
             width: 50%;
             float: left;
@@ -59,6 +60,19 @@
                             <input type="text" class="form-control snumber" name="exampleserailNumber"
                                 id="exampleserailNumber" value="<%=exampleserailNumber %>"
                                 placeholder="Enter Serial Number" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleassettype">Asset Type</label>
+                            <select class="form-control asset" disabled="disabled" name="exampleassettype"
+                                id="exampleassettype" autocomplete="off">
+                                <option value="" disabled selected><%=exampleassettype %></option>
+                                <option value="Desktop">Desktop</option>
+                                <option value="Laptop">Laptop</option>
+                                <option value="Printer">Printer</option>
+                                <option value="Tablet">Tablet</option>
+                                <option value="Server">Server</option>
+                                <option value="WorkStation">WorkStation</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleSapCode">Sap Code</label>
@@ -92,19 +106,44 @@
                             <input type="date" class="form-control invoicedate" name="exampleInvoiceDate"
                                 value="<%= exampleInvoiceDate %>" id="exampleInvoiceDate" autocomplete="off">
                         </div>
-                    </div>
-                    <div class="sub-entry col-sm-6">
-
                         <div class="form-group">
                             <label for="exampleInvoiceNumber">Invoice Number</label>
                             <input type="number" class="form-control invoicenumber" name="exampleInvoiceNumber"
                                 id="exampleInvoiceNumber" value="<%= exampleInvoiceNumber %>"
                                 placeholder="Enter Invoice Number" autocomplete="off">
                         </div>
+                    </div>
+                    <div class="sub-entry col-sm-6">
+
+
                         <div class="form-group">
                             <label for="exampleRecieveDate">Receive Date</label>
                             <input type="date" class="form-control receivedate" name="exampleRecieveDate"
                                 value="<%= exampleRecieveDate %>" id="exampleRecieveDate" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleproccessor">Proccessor</label>
+                            <input type="text" readonly="readonly" class="form-control proccessor"
+                                name="exampleproccessor" id="exampleproccessor" value="<%= exampleproccessor %>"
+                                autocomplete="off" placeholder="Enter Proccessor">
+                        </div>
+                        <div class="form-group">
+                            <label for="examplehardisk">Hardisk</label>
+                            <select class="form-control hardisk" disabled="disabled" name="examplehardisk"
+                                id="examplehardisk" autocomplete="off">
+                                <option value="" disabled selected><%= examplehardisk %></option>
+                                <option value="500 GB">500 GB</option>
+                                <option value="1 TB">1 TB</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleram">Ram</label>
+                            <select class="form-control ram" disabled="disabled" name="exampleram" id="exampleram"
+                                autocomplete="off">
+                                <option value="" disabled selected><%= exampleram %></option>
+                                <option value="4 GB">4 GB</option>
+                                <option value="8 GB">8 GB</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleModel">Model</label>
@@ -114,15 +153,14 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleModelDescp">Model Description</label>
-                            <textarea rows="6" style="height:211px;" type="textarea"
-                                class="form-control modeldescp" id="exampleModelDescp" name="exampleModelDescp"
-                                autocomplete="off"
+                            <textarea rows="6" style="height:211px;" type="textarea" class="form-control modeldescp"
+                                id="exampleModelDescp" name="exampleModelDescp" autocomplete="off"
                                 placeholder="Enter Model Description"><%= exampleModelDescp %></textarea>
                         </div>
                         <div class="form-group">
                             <label for="exampleUpdateSummit">Updated In Summit</label>
-                            <select class="form-control summit" name="exampleUpdateSummit"
-                                id="exampleUpdateSummit" autocomplete="off" placeholder="Enter Sap Code">
+                            <select class="form-control summit" name="exampleUpdateSummit" id="exampleUpdateSummit"
+                                autocomplete="off" placeholder="Enter Sap Code">
                                 <option value="" disabled selected><%= exampleUpdateSummit%></option>
                                 <option value="YES">YES</option>
                                 <option value="NO">NO</option>
@@ -145,4 +183,5 @@
 
     <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
 </body>
+
 </html>

@@ -17,6 +17,7 @@ var upload1 = require('express-fileupload');
 app.use(upload1());
 var temp = require('fs-temp');
 var xlsxtojson = require("xlsx-to-json");
+var converter = require('json-2-csv');
 
 const flashNotificationOptions = {
   beforeSingleRender: function (item, callback) {
@@ -73,6 +74,18 @@ const flashNotificationOptions = {
         case 'Excel_err':
           item.type = 'Please import excel file';
           item.alertClass = 'alert-warning';
+          break;
+        case 'Retrive-Error':
+          item.type = 'Soory, retrive failed'
+          item.alertClass = 'alert-danger';
+          break;
+        case 'Retrive-Success':
+          item.type = 'Retrived Successfully!!';
+          item.alertClass = 'alert-success';
+          break;
+        case 'type-Error':
+          item.type = 'Please Select Query Type';
+          item.alertClass = 'alert-info';
           break;
       }
     }
@@ -188,7 +201,6 @@ app.post('/upload', function (req, res) {
         console.log(path);
         var ext = name.split('.').pop();
         if (ext == 'xlsx') {
-          console.log('Hello');
           xlsxtojson({
             input: path,  // input xls 
             output: "output.json", // output json 
@@ -199,7 +211,6 @@ app.post('/upload', function (req, res) {
               console.log('Please upload xlsx files');
               req.flash('Excel_err', '', '/import_cap');
             } else {
-              console.log(result)
               db.collection('Capax').insertMany(result, function (err, collection) {
                 if (err) {
                   console.log(err);
@@ -331,6 +342,7 @@ app.set('view engine', 'ejs');
 
 app.post('/capax_save', function (req, res) {
   var serialNumber = req.body.exampleserailNumber;
+  var asset_type = req.body.exampleassettype;
   var sapCode = req.body.exampleSapCode;
   var materialCode = req.body.exampleMaterialCode;
   var materialQuantity = req.body.exampleMaterialQuantity;
@@ -339,6 +351,9 @@ app.post('/capax_save', function (req, res) {
   var invoiceDate = req.body.exampleInvoiceDate;
   var invoiceNumber = req.body.exampleInvoiceNumber;
   var receiveDate = req.body.exampleRecieveDate;
+  var processor = req.body.exampleproccessor;
+  var hardisk = req.body.examplehardisk;
+  var ram = req.body.exampleram;
   var model = req.body.exampleModel;
   var modelDesp = req.body.exampleModelDescp;
   var summit = req.body.exampleUpdateSummit;
@@ -346,6 +361,7 @@ app.post('/capax_save', function (req, res) {
 
   var data = {
     "serialNumber": serialNumber,
+    "asset_type": asset_type,
     "sapCode": sapCode,
     "materialCode": materialCode,
     "materialQuantity": materialQuantity,
@@ -354,6 +370,9 @@ app.post('/capax_save', function (req, res) {
     "invoiceDate": invoiceDate,
     "invoiceNumber": invoiceNumber,
     "receiveDate": receiveDate,
+    "proccessor": processor,
+    "hardisk": hardisk,
+    "ram": ram,
     "model": model,
     "modelDesp": modelDesp,
     "summit": summit
@@ -390,6 +409,7 @@ app.post('/capax_search', function (req, res) {
         datas.push({
           c_serialnum: serialnum,
           serialNumber: docs[i].serialNumber,
+          asset_type: docs[i].asset_type,
           sapCode: docs[i].sapCode,
           materialCode: docs[i].materialCode,
           materialQuantity: docs[i].materialQuantity,
@@ -398,6 +418,9 @@ app.post('/capax_search', function (req, res) {
           invoiceDate: docs[i].invoiceDate,
           invoiceNumber: docs[i].invoiceNumber,
           receiveDate: docs[i].receiveDate,
+          proccessor: docs[i].proccessor,
+          hardisk: docs[i].hardisk,
+          ram: docs[i].ram,
           model: docs[i].model,
           modelDesp: docs[i].modelDesp,
           summit: docs[i].summit,
@@ -408,6 +431,31 @@ app.post('/capax_search', function (req, res) {
       res.redirect('/c');
     }
   });
+})
+
+app.post('/dat', function (req, res) {
+  res.redirect('/search_c');
+})
+
+app.post('/cap-ret', function (req, res) {
+  db.collection('Capax').find().toArray(function (err, docs) {
+    if (err) throw err
+    console.log(docs);
+    if (!docs.length) {
+      console.log('No data to retrive.')
+      req.flash('Retrive-Error', '', '/cap-ret');
+    } else {
+      fs.writeFile('./js/data-capax.json', JSON.stringify(docs), function (err) {
+        if (err) {
+          console.log(err);
+          req.flash('Retrive-Error', '', '/cap-ret');
+        } else {
+          console.log('retrieved');
+          req.flash('Retrive-Success', '', '/data-cap');
+        }
+      });
+    }
+  })
 })
 
 /**
@@ -454,25 +502,56 @@ app.post('/capax_search', function (req, res) {
 //       }
 //     })
 // })
-
+var json2csvCallback;
+var main_data = [];
 app.post('/export', function (req, res) {
   db.collection('Capax').find().toArray(function (err, docs) {
     if (err) throw err
-    console.log(docs);
     if (!docs.length) {
       console.log('No data to export.')
       req.flash('Export-Error', '', '/import_cap');
     } else {
-      fs.writeFile('data-capax.json', JSON.stringify(docs), function (err) {
+      for (i = 0; i < docs.length; i++) {
+        main_data.push({
+          serialNumber: docs[i].serialNumber,
+          asset_type: docs[i].asset_type,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          invoiceNumber: docs[i].invoiceNumber,
+          receiveDate: docs[i].receiveDate,
+          proccessor: docs[i].proccessor,
+          hardisk: docs[i].hardisk,
+          ram: docs[i].ram,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          summit: docs[i].summit,
+        });
+      }
+      json2csvCallback = function (err, csv) {
         if (err) {
           console.log(err);
-          req.flash('Export-Error', '', '/import_cap');
+          req.flash('Export-Error', '', '/import_cap');;
         } else {
-          console.log('Exported');
-          req.flash('Export-Success', '', '/');
+          console.log(csv);
+          fs.writeFile('data-capax.csv', csv, function (err) {
+            if (err) {
+              console.log(err);
+              req.flash('Export-Error', '', '/import_cap');
+            } else {
+              console.log('Exported');
+              req.flash('Export-Success', '', '/');
+            }
+          });
         }
-      });
+      };
+
     }
+    converter.json2csv(main_data, json2csvCallback);
+
   })
 })
 
@@ -483,6 +562,7 @@ app.get('/capax_his', function (req, res) {
   for (i = 0; i < length; i++) {
     rec.push({
       serialNumber: datas[i].serialNumber,
+      asset_type: datas[i].asset_type,
       sapCode: datas[i].sapCode,
       materialCode: datas[i].materialCode,
       materialQuantity: datas[i].materialQuantity,
@@ -491,6 +571,9 @@ app.get('/capax_his', function (req, res) {
       invoiceDate: datas[i].invoiceDate,
       invoiceNumber: datas[i].invoiceNumber,
       receiveDate: datas[i].receiveDate,
+      proccessor: datas[i].proccessor,
+      hardisk: datas[i].hardisk,
+      ram: datas[i].ram,
       model: datas[i].model,
       modelDesp: datas[i].modelDesp,
       summit: datas[i].summit,
@@ -504,6 +587,7 @@ app.get('/capax_his', function (req, res) {
   else {
     res.render('capax_his', {
       exampleserailNumber: rec[0].serialNumber,
+      exampleassettype: rec[0].asset_type,
       exampleSapCode: rec[0].sapCode,
       exampleMaterialCode: rec[0].materialCode,
       exampleMaterialQuantity: rec[0].materialQuantity,
@@ -512,6 +596,9 @@ app.get('/capax_his', function (req, res) {
       exampleInvoiceDate: rec[0].invoiceDate,
       exampleInvoiceNumber: rec[0].invoiceNumber,
       exampleRecieveDate: rec[0].receiveDate,
+      exampleproccessor: rec[0].proccessor,
+      examplehardisk: rec[0].hardisk,
+      exampleram: rec[0].ram,
       exampleModel: rec[0].model,
       exampleModelDescp: rec[0].modelDesp,
       exampleUpdateSummit: rec[0].summit
@@ -529,6 +616,7 @@ app.get('/next', function (req, res) {
   for (i = 0; i < length; i++) {
     rec.push({
       serialNumber: datas[i].serialNumber,
+      asset_type: datas[i].asset_type,
       sapCode: datas[i].sapCode,
       materialCode: datas[i].materialCode,
       materialQuantity: datas[i].materialQuantity,
@@ -537,6 +625,9 @@ app.get('/next', function (req, res) {
       invoiceDate: datas[i].invoiceDate,
       invoiceNumber: datas[i].invoiceNumber,
       receiveDate: datas[i].receiveDate,
+      proccessor: datas[i].proccessor,
+      hardisk: datas[i].hardisk,
+      ram: datas[i].ram,
       model: datas[i].model,
       modelDesp: datas[i].modelDesp,
       summit: datas[i].summit,
@@ -566,11 +657,13 @@ app.get('/next', function (req, res) {
         exampleInvoiceDate: rec[j].invoiceDate,
         exampleInvoiceNumber: rec[j].invoiceNumber,
         exampleRecieveDate: rec[j].receiveDate,
+        exampleproccessor: rec[j].proccessor,
+        examplehardisk: rec[j].hardisk,
+        exampleram: rec[j].ram,
         exampleModel: rec[j].model,
         exampleModelDescp: rec[j].modelDesp,
         exampleUpdateSummit: rec[j].summit
       });
-
     }
   }
 })
@@ -587,6 +680,7 @@ app.get('/prev', function (req, res) {
     for (i = 0; i < length; i++) {
       rec.push({
         serialNumber: datas[i].serialNumber,
+        asset_type: datas[i].asset_type,
         sapCode: datas[i].sapCode,
         materialCode: datas[i].materialCode,
         materialQuantity: datas[i].materialQuantity,
@@ -595,6 +689,9 @@ app.get('/prev', function (req, res) {
         invoiceDate: datas[i].invoiceDate,
         invoiceNumber: datas[i].invoiceNumber,
         receiveDate: datas[i].receiveDate,
+        proccessor: datas[i].proccessor,
+        hardisk: datas[i].hardisk,
+        ram: datas[i].ram,
         model: datas[i].model,
         modelDesp: datas[i].modelDesp,
         summit: datas[i].summit,
@@ -620,6 +717,9 @@ app.get('/prev', function (req, res) {
         exampleInvoiceDate: rec[j].invoiceDate,
         exampleInvoiceNumber: rec[j].invoiceNumber,
         exampleRecieveDate: rec[j].receiveDate,
+        exampleproccessor: rec[j].proccessor,
+        examplehardisk: rec[j].hardisk,
+        exampleram: rec[j].ram,
         exampleModel: rec[j].model,
         exampleModelDescp: rec[j].modelDesp,
         exampleUpdateSummit: rec[j].summit
@@ -642,6 +742,7 @@ app.get('/c', function (req, res) {
     res.render('capax_se', {
       exampleserailNumber_c: rec.c_serialnum,
       exampleserailNumber: rec.serialNumber,
+      exampleassettype: rec.asset_type,
       exampleSapCode: rec.sapCode,
       exampleMaterialCode: rec.materialCode,
       exampleMaterialQuantity: rec.materialQuantity,
@@ -650,6 +751,9 @@ app.get('/c', function (req, res) {
       exampleInvoiceDate: rec.invoiceDate,
       exampleInvoiceNumber: rec.invoiceNumber,
       exampleRecieveDate: rec.receiveDate,
+      exampleproccessor: rec.proccessor,
+      examplehardisk: rec.hardisk,
+      exampleram: rec.ram,
       exampleModel: rec.model,
       exampleModelDescp: rec.modelDesp,
       exampleUpdateSummit: rec.summit
@@ -711,6 +815,7 @@ app.get('/capax_edit', function (req, res) {
   else {
     res.render('capax_edit', {
       exampleserailNumber: rec.serialNumber,
+      exampleassettype: rec.asset_type,
       exampleSapCode: rec.sapCode,
       exampleMaterialCode: rec.materialCode,
       exampleMaterialQuantity: rec.materialQuantity,
@@ -719,6 +824,9 @@ app.get('/capax_edit', function (req, res) {
       exampleInvoiceDate: rec.invoiceDate,
       exampleInvoiceNumber: rec.invoiceNumber,
       exampleRecieveDate: rec.receiveDate,
+      exampleproccessor: rec.proccessor,
+      examplehardisk: rec.hardisk,
+      exampleram: rec.ram,
       exampleModel: rec.model,
       exampleModelDescp: rec.modelDesp,
       exampleUpdateSummit: rec.summit
@@ -727,8 +835,8 @@ app.get('/capax_edit', function (req, res) {
 })
 
 app.post('/editc_save', function (req, res) {
-  console.log(req.body)
   var serialNumber = req.body.exampleserailNumber;
+  var asset_type = req.body.exampleassettype;
   var sapCode = req.body.exampleSapCode;
   var materialCode = req.body.exampleMaterialCode;
   var materialQuantity = req.body.exampleMaterialQuantity;
@@ -737,6 +845,9 @@ app.post('/editc_save', function (req, res) {
   var invoiceDate = req.body.exampleInvoiceDate;
   var invoiceNumber = req.body.exampleInvoiceNumber;
   var receiveDate = req.body.exampleRecieveDate;
+  var processor = req.body.exampleproccessor;
+  var hardisk = req.body.examplehardisk;
+  var ram = req.body.exampleram;
   var model = req.body.exampleModel;
   var modelDesp = req.body.exampleModelDescp;
   var summit = req.body.exampleUpdateSummit;
@@ -744,6 +855,7 @@ app.post('/editc_save', function (req, res) {
 
   data_ed = {
     "serialNumber": serialNumber,
+    "asset_type": asset_type,
     "sapCode": sapCode,
     "materialCode": materialCode,
     "materialQuantity": materialQuantity,
@@ -752,6 +864,9 @@ app.post('/editc_save', function (req, res) {
     "invoiceDate": invoiceDate,
     "invoiceNumber": invoiceNumber,
     "receiveDate": receiveDate,
+    "proccessor": processor,
+    "hardisk": hardisk,
+    "ram": ram,
     "model": model,
     "modelDesp": modelDesp,
     "summit": summit
@@ -767,6 +882,177 @@ app.post('/editc_save', function (req, res) {
   })
 })
 
+var query_d = [];
+var main_data = [];
+var val;
+var key;
+app.post('/query', function (req, res) {
+  var query = req.body.examplequerycapax;
+  if (query == null) {
+    console.log('Please Select type')
+    req.flash('type-Error', '', '/import_cap');
+  } else {
+    var split = [];
+    split = query.split('-');
+    key = split[0];
+    val = split[1];
+    console.log(val)
+
+    if (key == 'hardisk') {
+      db.collection('Capax').find({ 'hardisk': val }).toArray(function (err, docs) {
+        if (err) throw err
+        if (!docs.length) {
+          res.redirect('/import_cap')
+        } else {
+          var i;
+          for (i = 0; i < docs.length; i++) {
+            query_d.push({
+              serialNumber: docs[i].serialNumber,
+              asset_type: docs[i].asset_type,
+              sapCode: docs[i].sapCode,
+              materialCode: docs[i].materialCode,
+              materialQuantity: docs[i].materialQuantity,
+              poDate: docs[i].poDate,
+              poNum: docs[i].poNum,
+              invoiceDate: docs[i].invoiceDate,
+              invoiceNumber: docs[i].invoiceNumber,
+              receiveDate: docs[i].receiveDate,
+              proccessor: docs[i].proccessor,
+              hardisk: docs[i].hardisk,
+              ram: docs[i].ram,
+              model: docs[i].model,
+              modelDesp: docs[i].modelDesp,
+              summit: docs[i].summit
+            })
+          }
+          for (i = 0; i < docs.length; i++) {
+            main_data.push({
+              serialNumber: docs[i].serialNumber,
+              asset_type: docs[i].asset_type,
+              sapCode: docs[i].sapCode,
+              materialCode: docs[i].materialCode,
+              materialQuantity: docs[i].materialQuantity,
+              poDate: docs[i].poDate,
+              poNum: docs[i].poNum,
+              invoiceDate: docs[i].invoiceDate,
+              invoiceNumber: docs[i].invoiceNumber,
+              receiveDate: docs[i].receiveDate,
+              proccessor: docs[i].proccessor,
+              hardisk: docs[i].hardisk,
+              ram: docs[i].ram,
+              model: docs[i].model,
+              modelDesp: docs[i].modelDesp,
+              summit: docs[i].summit,
+            });
+          }
+          fs.writeFile('./js/cap-query.json', JSON.stringify(query_d), function (err) {
+            if (err) {
+              console.log(err);
+              req.flash('Retrive-Error', '', '/import_cap');
+
+            } else {
+              console.log('Exported');
+              req.flash('Retrive-Success', '', '/cap-query');
+              query_d = [];
+            }
+          });
+
+        }
+      });
+    } else {
+      res.redirect('/ram');
+    }
+  }
+})
+
+app.get('/ram', function (req, res) {
+  db.collection('Capax').find({ 'ram': val }).toArray(function (err, docs) {
+    if (err) throw errx
+    if (!docs.length) {
+      res.redirect('/import_cap')
+    } else {
+      var i;
+      for (i = 0; i < docs.length; i++) {
+        query_d.push({
+          serialNumber: docs[i].serialNumber,
+          asset_type: docs[i].asset_type,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          invoiceNumber: docs[i].invoiceNumber,
+          receiveDate: docs[i].receiveDate,
+          proccessor: docs[i].proccessor,
+          hardisk: docs[i].hardisk,
+          ram: docs[i].ram,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          summit: docs[i].summit
+        })
+      }
+      for (i = 0; i < docs.length; i++) {
+        main_data.push({
+          serialNumber: docs[i].serialNumber,
+          asset_type: docs[i].asset_type,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          invoiceNumber: docs[i].invoiceNumber,
+          receiveDate: docs[i].receiveDate,
+          proccessor: docs[i].proccessor,
+          hardisk: docs[i].hardisk,
+          ram: docs[i].ram,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          summit: docs[i].summit,
+        });
+      }
+      fs.writeFile('./js/cap-query.json', JSON.stringify(query_d), function (err) {
+        if (err) {
+          console.log(err);
+          req.flash('Retrive-Error', '', '/import_cap');
+
+        } else {
+          console.log('Exported');
+          req.flash('Retrive-Success', '', '/cap-query');
+          query_d = [];
+        }
+      });
+
+    }
+  })
+})
+
+var json2csvCallback;
+
+app.get('/export_q', function (req, res) {
+  json2csvCallback = function (err, csv) {
+    if (err) {
+      console.log(err);
+      req.flash('Export-Error', '', '/import_cap');;
+    } else {
+
+      console.log(csv);
+      fs.writeFile('data-query.csv', csv, function (err) {
+        if (err) {
+          console.log(err);
+          req.flash('Export-Error', '', '/import_cap');
+        } else {
+
+          console.log('Exported');
+          main_data = [];
+          req.flash('Export-Success', '', '/');
+        }
+      });
+    }
+  };
+  converter.json2csv(main_data, json2csvCallback);
+})
 /**
  * Revenue
  */
@@ -1144,6 +1430,31 @@ app.post('/editr_save', function (req, res) {
 //     })
 // })
 
+app.post('/dat_r', function (req, res) {
+  res.redirect('/search_r');
+})
+
+app.post('/rev-ret', function (req, res) {
+  db.collection('Revenue').find().toArray(function (err, docs) {
+    if (err) throw err
+    console.log(docs);
+    if (!docs.length) {
+      console.log('No data to retrive.')
+      req.flash('Retrive-Error', '', '/rev-ret');
+    } else {
+      fs.writeFile('./js/data-revenue.json', JSON.stringify(docs), function (err) {
+        if (err) {
+          console.log(err);
+          req.flash('Retrive-Error', '', '/rev-ret');
+        } else {
+          console.log('retrieved');
+          req.flash('Retrive-Success', '', '/data-rev');
+        }
+      });
+    }
+  })
+})
+
 app.post('/export_r', function (req, res) {
   db.collection('Revenue').find().toArray(function (err, docs) {
     if (err) throw err
@@ -1174,6 +1485,11 @@ app.get('/search_c', (req, res) => res.render('search_c'));
 app.get('/search_r', (req, res) => res.render('search_r'));
 app.get('/import_cap', (req, res) => res.render('import_cap'));
 app.get('/import_rev', (req, res) => res.render('import_rev'));
+app.get('/data-cap', (req, res) => res.render('data-cap'));
+app.get('/cap-ret', (req, res) => res.render('cap-ret'));
+app.get('/data-rev', (req, res) => res.render('data-rev'));
+app.get('/rev-ret', (req, res) => res.render('rev-ret'));
+app.get('/cap-query', (req, res) => res.render('cap-query'));
 // LOCAL
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 

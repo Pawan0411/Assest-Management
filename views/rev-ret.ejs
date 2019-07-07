@@ -50,27 +50,16 @@
         <li><a href="./capax">Capax</a></li>
         <li><a href="./revenue">Revenue</a></li>
     </ul>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        Please add your file to Database
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+    <%- locals.flash %>
     <div class="container">
         <div class="row">
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" id="cardetails">
                 <div class="card card-signin my-5">
                     <div class="card-body">
-                        <legend class="">Capax</legend>
-                        <form action="/retrive" method="POST" enctype="multipart/form-data">
-                            <div class="custom-file mb-3">
-                                <input type="text" readonly="readonly" name="file" value="<%= file %>" id="file"
-                                    class="form-control">
-                                <!-- <label for="file" class="custom-file-label">Choose File</label> -->
-                            </div>
-                            <input type="submit" value="Add to Database" class="btn btn-success">
-                            <input type="submit" value="Import" disabled="disabled" class="btn btn-primary">
-                            <input type="submit" formaction="/export" value="Export" class="btn btn-primary">
+                        <legend class="">Revenue</legend>
+                        <p><b>Note : </b>Please retrive the latest data from Database.</p>
+                        <form action="/rev-ret" method="POST" enctype="multipart/form-data">
+                            <input type="submit" value="Retrive" class="btn btn-primary">
                         </form>
                     </div>
                 </div>

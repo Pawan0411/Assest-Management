@@ -45,7 +45,7 @@
         <li><a href="./import_cap">Import</a></li>
         <li><a href="./search_c">Search</a></li>
         <li><a href="./revenue">Revenue</a></li>
-
+        <li><a href="./cap-ret">Existing Data</a></li>
     </ul>
     <%- locals.flash %>
     <div class="row">
@@ -58,6 +58,19 @@
                         <label for="exampleserailNumber">Serial Number</label>
                         <input type="text" class="form-control snumber" name="exampleserailNumber"
                             id="exampleserailNumber" placeholder="Enter Serial Number" autocomplete="off" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleassettype">Asset Type</label>
+                        <select class="form-control asset" name="exampleassettype" id="exampleassettype"
+                            autocomplete="off">
+                            <option value="" disabled selected>Select</option>
+                            <option value="Desktop">Desktop</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Printer">Printer</option>
+                            <option value="Tablet">Tablet</option>
+                            <option value="Server">Server</option>
+                            <option value="WorkStation">WorkStation</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="exampleSapCode">Sap Code</label>
@@ -90,17 +103,41 @@
                         <input type="date" class="form-control invoicedate" name="exampleInvoiceDate"
                             id="exampleInvoiceDate" autocomplete="off">
                     </div>
-                </div>
-                <div class="sub-entry col-sm-6" >
                     <div class="form-group">
                         <label for="exampleInvoiceNumber">Invoice Number</label>
                         <input type="number" class="form-control invoicenumber" name="exampleInvoiceNumber"
                             id="exampleInvoiceNumber" placeholder="Enter Invoice Number" autocomplete="off">
                     </div>
+                </div>
+                <div class="sub-entry col-sm-6">
+
                     <div class="form-group">
                         <label for="exampleRecieveDate">Receive Date</label>
                         <input type="date" class="form-control receivedate" name="exampleRecieveDate"
                             id="exampleRecieveDate" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleproccessor">Proccessor</label>
+                        <input type="text" class="form-control proccessor" name="exampleproccessor"
+                            id="exampleproccessor" autocomplete="off" placeholder="Enter Proccessor">
+                    </div>
+                    <div class="form-group">
+                        <label for="examplehardisk">Hardisk</label>
+                        <select class="form-control hardisk" name="examplehardisk" id="examplehardisk"
+                        autocomplete="off">
+                        <option value="" disabled selected>Select</option>
+                        <option value="500 GB">500GB</option>
+                        <option value="1 TB">1TB</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleram">Ram</label>
+                        <select class="form-control ram" name="exampleram" id="exampleram"
+                        autocomplete="off">
+                        <option value="" disabled selected>Select</option>
+                        <option value="4 GB">4GB</option>
+                        <option value="8 GB">8GB</option>
+                    </select>
                     </div>
                     <div class="form-group">
                         <label for="exampleModel">Model</label>
@@ -109,8 +146,9 @@
                     </div>
                     <div class="form-group">
                         <label for="exampleModelDescp">Model Description</label>
-                        <textarea type="textarea" rows="8" style="height:211px;" cols="50" class="form-control modeldescp" name="exampleModelDescp"
-                            id="exampleModelDescp" autocomplete="off" placeholder="Enter Model Description"> </textarea>
+                        <textarea type="textarea" rows="8" style="height:211px;" cols="50"
+                            class="form-control modeldescp" name="exampleModelDescp" id="exampleModelDescp"
+                            autocomplete="off" placeholder="Enter Model Description"> </textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleUpdateSummit">Updated In Summit</label>
@@ -122,7 +160,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary " >Submit</button>
+                <button type="submit" class="btn btn-primary ">Submit</button>
             </form>
         </div>
     </div>
@@ -136,4 +174,5 @@
 
     <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
 </body>
+
 </html>
