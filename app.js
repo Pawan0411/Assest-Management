@@ -361,7 +361,7 @@ app.post('/capax_save', function (req, res) {
 
   var data = {
     "serialNumber": serialNumber,
-    "asset_type": asset_type,
+    "asset Type": asset_type,
     "sapCode": sapCode,
     "materialCode": materialCode,
     "materialQuantity": materialQuantity,
@@ -434,6 +434,8 @@ app.post('/capax_search', function (req, res) {
 })
 
 app.post('/dat', function (req, res) {
+  var p = req.body.exampleserailNumber;
+  console.log(p);
   res.redirect('/search_c');
 })
 

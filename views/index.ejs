@@ -8,53 +8,80 @@
   <title>Assets Management</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+    integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+    integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+    integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
   <%- locals.flash %>
   <div class="container">
     <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" id="cardetails">
+        <div class="card card-signin my-5" id="login">
+          <div class="card-body">
+            <label>User Name</label>
+            <div class="form-group">
+              <input type="text" class="form-control username" name="username" id="username"
+                placeholder="Enter Username" autocomplete="off" /></div>
+            <label>Password</label>
+            <div class="form-group">
+              <input type="password" class="form-control pass" name="Password" id="Password"
+                placeholder="Enter Password" autocomplete="off"/>
+            </div>
+            <button type="login" onclick="onclick()" class="btn btn-primary" id="login_b">LOGIN</button>
 
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" >
-        <div class="card card-signin my-5">
-          <div class="card-body" style="height: auto">
-              <div style="visibility:hidden" id="assets">
-                  <h3 align="center" id="welcome" >Welcome User &#128519; </h3>
-          <nav id="nav-bar" class="navbar navbar-expand-sm navbar-default bg-default">
+          </div>
+        </div>
+        <div class="card card-signin my-5" id="logout">
+          <div class="card-body">
+
+            <h3 align="center" id="welcome">Welcome User &#128519; </h3>
+            <nav id="nav-bar" class="navbar navbar-expand-sm navbar-default bg-default">
               <ul class="navbar-nav mx-auto">
-                  <li class="nav-item">
-                      <a href="./capax" class="hvr-grow nav-link">CAPAX</a>
-                  </li>
-                  <li class="nav-item">
-                      <a href="./revenue" class="hvr-grow nav-link" >REVENUE</a>
-                  </li>
+                <li class="nav-item">
+                  <a href="./capax" class="hvr-grow nav-link">CAPAX</a>
+                </li>
+                <li class="nav-item">
+                  <a href="./revenue" class="hvr-grow nav-link">REVENUE</a>
+                </li>
               </ul>
-          </nav>
+            </nav>
+            <button type="login" onclick="onclic()" class="btn btn-primary" id="logout_b">LOG OUT</button>
           </div>
-            <div  id="cardetails">
-            <h5 class="card-title text-center">Sign In Here</h5>
+         
 
-            <form class="form-signin">
-              <div class="form-label-group">
-                <label for="inputPassword">OTP</label>
-                <input type="text" id="inputPassword" class="form-control" placeholder="Enter OTP" required>
-              </div>
-              <br>
-              <button class="btn btn-lg btn-primary btn-block text-uppercase" id="sign-in-button" type="submit">Sign
-                in</button>
-              <hr class="my-4">
-            </form>
-            <button disabled="disabled" class="btn btn-danger btn-block text-uppercase" id="resend" type="submit">Resend
-              Code</button>
-          </div>
-          
         </div>
-        </div>
+      </div>
     </div>
   </div>
   </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
 
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyBwsI6D6iVLokXJqymIbgHuoWMX2TDJrlk",
+      authDomain: "assets-management-ee8f8.firebaseapp.com",
+      databaseURL: "https://assets-management-ee8f8.firebaseio.com",
+      projectId: "assets-management-ee8f8",
+      storageBucket: "",
+      messagingSenderId: "1033470144305",
+      appId: "1:1033470144305:web:5fa7afe425957fb9"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -62,11 +89,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-
-  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
-  <script src="phoneapp.js"></script>
+  <script src="loginemail.js"></script>
 </body>
 
 </html>
