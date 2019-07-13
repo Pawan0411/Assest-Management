@@ -361,7 +361,7 @@ app.post('/capax_save', function (req, res) {
 
   var data = {
     "serialNumber": serialNumber,
-    "asset Type": asset_type,
+    "asset_Type": asset_type,
     "sapCode": sapCode,
     "materialCode": materialCode,
     "materialQuantity": materialQuantity,
@@ -440,7 +440,7 @@ app.post('/dat', function (req, res) {
 })
 
 app.post('/cap-ret', function (req, res) {
-  db.collection('Capax').find().toArray(function (err, docs) {
+  db.collection('Capax').find().toArray( (err, docs) => {
     if (err) throw err
     console.log(docs);
     if (!docs.length) {
@@ -507,7 +507,7 @@ app.post('/cap-ret', function (req, res) {
 var json2csvCallback;
 var main_data = [];
 app.post('/export', function (req, res) {
-  db.collection('Capax').find().toArray(function (err, docs) {
+  db.collection('Capax').find().toArray( (err, docs) =>{
     if (err) throw err
     if (!docs.length) {
       console.log('No data to export.')
@@ -886,22 +886,20 @@ app.post('/editc_save', function (req, res) {
 
 var query_d = [];
 var main_data = [];
-var val;
-var key;
+var query, query_h, query_a, query_m;
+
 app.post('/query', function (req, res) {
-  var query = req.body.examplequerycapax;
+  query = req.body.examplequery;
+  query_h = req.body.query_h;
+  query_r = req.body.query_r;
+  query_a = req.body.query_a;
+  query_m = req.body.query_m;
   if (query == null) {
     console.log('Please Select type')
     req.flash('type-Error', '', '/import_cap');
   } else {
-    var split = [];
-    split = query.split('-');
-    key = split[0];
-    val = split[1];
-    console.log(val)
-
-    if (key == 'hardisk') {
-      db.collection('Capax').find({ 'hardisk': val }).toArray(function (err, docs) {
+    if (query == 'hardisk') {
+      db.collection('Capax').find({ 'hardisk': query_h }).toArray( (err, docs) => {
         if (err) throw err
         if (!docs.length) {
           res.redirect('/import_cap')
@@ -910,7 +908,7 @@ app.post('/query', function (req, res) {
           for (i = 0; i < docs.length; i++) {
             query_d.push({
               serialNumber: docs[i].serialNumber,
-              asset_type: docs[i].asset_type,
+              asset_Type: docs[i].asset_Type,
               sapCode: docs[i].sapCode,
               materialCode: docs[i].materialCode,
               materialQuantity: docs[i].materialQuantity,
@@ -930,7 +928,7 @@ app.post('/query', function (req, res) {
           for (i = 0; i < docs.length; i++) {
             main_data.push({
               serialNumber: docs[i].serialNumber,
-              asset_type: docs[i].asset_type,
+              asset_Type: docs[i].asset_Type,
               sapCode: docs[i].sapCode,
               materialCode: docs[i].materialCode,
               materialQuantity: docs[i].materialQuantity,
@@ -961,14 +959,16 @@ app.post('/query', function (req, res) {
 
         }
       });
-    } else {
+    } else if (query == 'ram') {
       res.redirect('/ram');
+    } else if (query == 'asset') {
+      res.redirect('/asset');
     }
   }
 })
 
 app.get('/ram', function (req, res) {
-  db.collection('Capax').find({ 'ram': val }).toArray(function (err, docs) {
+  db.collection('Capax').find({ 'ram': query_r }).toArray( (err, docs) => {
     if (err) throw errx
     if (!docs.length) {
       res.redirect('/import_cap')
@@ -977,7 +977,7 @@ app.get('/ram', function (req, res) {
       for (i = 0; i < docs.length; i++) {
         query_d.push({
           serialNumber: docs[i].serialNumber,
-          asset_type: docs[i].asset_type,
+          asset_Type: docs[i].asset_Type,
           sapCode: docs[i].sapCode,
           materialCode: docs[i].materialCode,
           materialQuantity: docs[i].materialQuantity,
@@ -997,7 +997,7 @@ app.get('/ram', function (req, res) {
       for (i = 0; i < docs.length; i++) {
         main_data.push({
           serialNumber: docs[i].serialNumber,
-          asset_type: docs[i].asset_type,
+          asset_Type: docs[i].asset_Type,
           sapCode: docs[i].sapCode,
           materialCode: docs[i].materialCode,
           materialQuantity: docs[i].materialQuantity,
@@ -1027,23 +1027,148 @@ app.get('/ram', function (req, res) {
       });
 
     }
+    
   })
 })
 
+app.get('/asset', function (req, res) {
+  if (query_m == ''){
+  db.collection('Capax').find({ 'asset_Type': query_a }).toArray((err, docs) => {
+    if (err) throw err;
+    if (!docs.length) {
+      res.redirect('/import_cap')
+    } else {
+    var i;
+      for (i = 0; i < docs.length; i++) {
+        query_d.push({
+          serialNumber: docs[i].serialNumber,
+          asset_Type: docs[i].asset_Type,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          invoiceNumber: docs[i].invoiceNumber,
+          receiveDate: docs[i].receiveDate,
+          proccessor: docs[i].proccessor,
+          hardisk: docs[i].hardisk,
+          ram: docs[i].ram,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          summit: docs[i].summit
+        })
+      }
+      for (i = 0; i < docs.length; i++) {
+        main_data.push({
+          serialNumber: docs[i].serialNumber,
+          asset_Type: docs[i].asset_Type,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          invoiceNumber: docs[i].invoiceNumber,
+          receiveDate: docs[i].receiveDate,
+          proccessor: docs[i].proccessor,
+          hardisk: docs[i].hardisk,
+          ram: docs[i].ram,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          summit: docs[i].summit,
+        });
+      }
+      fs.writeFile('./js/cap-query.json', JSON.stringify(query_d), function (err) {
+        if (err) {
+          console.log(err);
+          req.flash('Retrive-Error', '', '/import_cap');
+
+        } else {
+          console.log('Exported');
+          req.flash('Retrive-Success', '', '/cap-query');
+          query_d = [];
+        }
+      });
+    }
+    })
+  }else {
+    db.collection('Capax').find({ 'asset_Type': query_a }).toArray((err, docs) => {
+      if (err) throw err;
+      if (!docs.length) {
+        res.redirect('/import_cap')
+      } else {
+      var i;
+        for (i = 0; i < docs.length; i++) {
+          query_d.push({
+            serialNumber: docs[i].serialNumber,
+            asset_Type: docs[i].asset_Type,
+            sapCode: docs[i].sapCode,
+            materialCode: docs[i].materialCode,
+            materialQuantity: docs[i].materialQuantity,
+            poDate: docs[i].poDate,
+            poNum: docs[i].poNum,
+            invoiceDate: docs[i].invoiceDate,
+            invoiceNumber: docs[i].invoiceNumber,
+            receiveDate: docs[i].receiveDate,
+            proccessor: docs[i].proccessor,
+            hardisk: docs[i].hardisk,
+            ram: docs[i].ram,
+            model: docs[i].model,
+            modelDesp: docs[i].modelDesp,
+            summit: docs[i].summit
+          })
+        }
+        for (i = 0; i < docs.length; i++) {
+          main_data.push({
+            serialNumber: docs[i].serialNumber,
+            asset_Type: docs[i].asset_Type,
+            sapCode: docs[i].sapCode,
+            materialCode: docs[i].materialCode,
+            materialQuantity: docs[i].materialQuantity,
+            poDate: docs[i].poDate,
+            poNum: docs[i].poNum,
+            invoiceDate: docs[i].invoiceDate,
+            invoiceNumber: docs[i].invoiceNumber,
+            receiveDate: docs[i].receiveDate,
+            proccessor: docs[i].proccessor,
+            hardisk: docs[i].hardisk,
+            ram: docs[i].ram,
+            model: docs[i].model,
+            modelDesp: docs[i].modelDesp,
+            summit: docs[i].summit,
+          });
+        }
+        fs.writeFile('./js/cap-query.json', JSON.stringify(query_d), function (err) {
+          if (err) {
+            console.log(err);
+            req.flash('Retrive-Error', '', '/import_cap');
+  
+          } else {
+            console.log('Exported');
+            req.flash('Retrive-Success', '', '/cap-query');
+            query_d = [];
+          }
+        });
+      }
+      })
+
+  }
+});
 var json2csvCallback;
 
 app.get('/export_q', function (req, res) {
   json2csvCallback = function (err, csv) {
     if (err) {
       console.log(err);
-      req.flash('Export-Error', '', '/import_cap');;
+      req.flash('Export-Error', '', '/import');;
     } else {
 
       console.log(csv);
       fs.writeFile('data-query.csv', csv, function (err) {
         if (err) {
           console.log(err);
-          req.flash('Export-Error', '', '/import_cap');
+          req.flash('Export-Error', '', '/import');
         } else {
 
           console.log('Exported');
@@ -1457,24 +1582,56 @@ app.post('/rev-ret', function (req, res) {
   })
 })
 
+var json2csvCallback;
+var main_data = [];
 app.post('/export_r', function (req, res) {
   db.collection('Revenue').find().toArray(function (err, docs) {
     if (err) throw err
-    console.log(docs);
     if (!docs.length) {
       console.log('No data to export.')
-      req.flash('Export-Error', '', '/import_cap');
+      req.flash('Export-Error', '', '/import_rev');
     } else {
-      fs.writeFile('data-revenue.json', JSON.stringify(docs), function (err) {
+      for (i = 0; i < docs.length; i++) {
+        main_data.push({
+          serialNumber: docs[i].serialNumber,
+          asset_type: docs[i].asset_type,
+          sapCode: docs[i].sapCode,
+          materialCode: docs[i].materialCode,
+          materialQuantity: docs[i].materialQuantity,
+          poDate: docs[i].poDate,
+          poNum: docs[i].poNum,
+          invoiceDate: docs[i].invoiceDate,
+          invoiceNumber: docs[i].invoiceNumber,
+          receiveDate: docs[i].receiveDate,
+          proccessor: docs[i].proccessor,
+          hardisk: docs[i].hardisk,
+          ram: docs[i].ram,
+          model: docs[i].model,
+          modelDesp: docs[i].modelDesp,
+          summit: docs[i].summit,
+        });
+      }
+      json2csvCallback = function (err, csv) {
         if (err) {
           console.log(err);
-          req.flash('Export-Error', '', '/import_rev');
+          req.flash('Export-Error', '', '/import_rev');;
         } else {
-          console.log('Exported');
-          req.flash('Export-Success', '', '/');
+          console.log(csv);
+          fs.writeFile('data-capax.csv', csv, function (err) {
+            if (err) {
+              console.log(err);
+              req.flash('Export-Error', '', '/import_rev');
+            } else {
+              console.log('Exported');
+              req.flash('Export-Success', '', '/');
+            }
+          });
         }
-      });
+      };
+
     }
+    converter.json2csv(main_data, json2csvCallback);
+
   })
 })
 

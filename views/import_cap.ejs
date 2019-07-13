@@ -69,23 +69,45 @@
                         <legend>Query capax</legend>
                         <form action="/query" method="POST">
                             <div class="form-group">
-                                <select class="form-control query_c" name="examplequerycapax" id="examplequerycapax"
-                                    autocomplete="off">
-                                    <option value="" disabled selected>Select query type</option>
-                                    <option value="hardisk-500 GB">Hardisk-500 GB</option>
-                                    <option value="hardisk-1 TB">Hardisk-1 TB</option>
-                                    <option value="ram-4 GB">Ram-4 GB</option>
-                                    <option value="ram-8 GB">Ram-8 GB</option>
+                                <select class="form-control query" name="examplequery" id="examplequery"
+                                    onchange='query(this.value);' autocomplete="off">
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="hardisk">Hardisk</option>
+                                    <option value="ram">Ram</option>
+                                    <option value="asset">Asset Type</option>
                                 </select>
                             </div>
+                            <select class="form-control query_h" name="query_h" id="query_h" style="display: none"
+                                autocomplete="off">
+                                <option value="" disabled selected>Select</option>
+                                <option value="500 GB">500GB</option>
+                                <option value="1 TB">1TB</option>
+                            </select>
+                            <select class="form-control query_r" name="query_r" id="query_r" style="display: none"
+                                autocomplete="off">
+                                <option value="" disabled selected>Select</option>
+                                <option value="4 GB">4GB</option>
+                                <option value="8 GB">8GB</option>
+                            </select>
+                            <select class="form-control query_a" name="query_a" id="query_a" autocomplete="off"
+                                style="display: none" onchange='query_mod(this.value);'>
+                                <option value="" disabled selected>Select</option>
+                                <option value="Desktop">Desktop</option>
+                                <option value="Laptop">Laptop</option>
+                                <option value="Printer">Printer</option>
+                                <option value="Tablet">Tablet</option>
+                                <option value="Server">Server</option>
+                                <option value="WorkStation">WorkStation</option>
+                            </select>
+                            <input type="text" class="form-control query_m" name="query_m" id="query_m"
+                                autocomplete="off" placeholder="Enter Model (Optional)" style="display: none">
+                            <br>
                             <input type="submit" value="Query" class="btn btn-primary">
+                        </form>
                     </div>
-
-                    </form>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <script>
@@ -95,6 +117,40 @@
             //replace the "Choose a file" label
             $(this).next('.custom-file-label').html(fileName);
         })
+    </script>
+    <script type="text/javascript">
+        function query(val) {
+            var element = document.getElementById('query_h');
+            if (val == 'hardisk')
+                element.style.display = 'block';
+            else
+                element.style.display = 'none';
+
+            var element = document.getElementById('query_r');
+            if (val == 'ram')
+                element.style.display = 'block';
+            else
+                element.style.display = 'none';
+
+            var element = document.getElementById('query_a');
+            if (val == 'asset')
+                element.style.display = 'block';
+            else
+                element.style.display = 'none';
+        }
+    </script>
+    <script type="text/javascript">
+        function query_mod(val) {
+            console.log('hello');
+            var element = document.getElementById('query_m');
+            if (val == 'Desktop' || 'Laptop' || 'Printer' || 'Tablet' || 'Server' || 'WorkStation') {
+                element.style.display = 'block';
+            }
+            else {
+                element.style.display = 'none'
+            }
+
+        }
     </script>
 </body>
 
