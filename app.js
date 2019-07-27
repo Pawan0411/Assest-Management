@@ -651,6 +651,7 @@ app.get('/next', function (req, res) {
       console.log(rec[j]);
       res.render('capax_his', {
         exampleserailNumber: rec[j].serialNumber,
+        exampleassettype: rec[j].asset_type,
         exampleSapCode: rec[j].sapCode,
         exampleMaterialCode: rec[j].materialCode,
         exampleMaterialQuantity: rec[j].materialQuantity,
@@ -682,7 +683,7 @@ app.get('/prev', function (req, res) {
     for (i = 0; i < length; i++) {
       rec.push({
         serialNumber: datas[i].serialNumber,
-        asset_type: datas[i].asset_type,
+        exampleassettype: datas[i].asset_type,
         sapCode: datas[i].sapCode,
         materialCode: datas[i].materialCode,
         materialQuantity: datas[i].materialQuantity,
@@ -711,6 +712,7 @@ app.get('/prev', function (req, res) {
       console.log(rec[j]);
       res.render('capax_his', {
         exampleserailNumber: rec[j].serialNumber,
+        exampleassettype: rec[j].asset_type,
         exampleSapCode: rec[j].sapCode,
         exampleMaterialCode: rec[j].materialCode,
         exampleMaterialQuantity: rec[j].materialQuantity,
